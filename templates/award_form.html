@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Awards Form</title>
+  <link rel="stylesheet" href="{% static 'css/Award_form.css' %}">
+</head>
+<body>
+  <div class="form-container">
+    <h2>Awards Information</h2>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+
+      <div class="form-group">
+        {{ form.title_of_award.label_tag }}
+        {{ form.title_of_award }}
+        {{ form.title_of_award.errors }}
+      </div>
+
+      <div class="form-group">
+        {{ form.awarding_body.label_tag }}
+        {{ form.awarding_body }}
+        {{ form.awarding_body.errors }}
+      </div>
+
+      <div class="form-group">
+        {{ form.level.label_tag }}
+        {{ form.level }}
+        {{ form.level.errors }}
+      </div>
+
+      <div class="form-group">
+        {{ form.date_of_award.label_tag }}
+        {{ form.date_of_award }}
+        {{ form.date_of_award.errors }}
+      </div>
+
+      <div class="form-group">
+        {{ form.nature_of_contribution.label_tag }}
+        {{ form.nature_of_contribution }}
+        {{ form.nature_of_contribution.errors }}
+      </div>
+
+      <button type="submit" class="submit-button">Submit</button>
+    </form>
+  </div>
+</body>
+</html>

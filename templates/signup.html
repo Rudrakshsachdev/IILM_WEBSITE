@@ -1,0 +1,58 @@
+{% comment %} {% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Signup</title>
+  <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+</head>
+<body>
+  <div class="container">
+    <form method="post">
+      {% csrf_token %}
+      <h2>Signup</h2>
+      {{ form.as_p }}
+      <input type="checkbox"  onclick="togglePassword()"> Show Password<br><br>
+      <button type="submit">Sign Up</button>
+      <a href="{% url 'login' %}">Already have an account? Login</a>
+    </form>
+  </div>
+  <script src="{% static 'js/toggle_password.js' %}"></script>
+</body>
+</html> {% endcomment %}
+
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Signup - IILM University</title>
+  <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <img src="{% static 'images/iilm_logo.png' %}" alt="IILM University Logo">
+    </div>
+
+    <h2>Signup</h2>
+    
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+
+      <label class="checkbox-label">
+        <input type="checkbox" onclick="togglePassword()"> Show Password
+      </label>
+
+      <button type="submit">Sign Up</button>
+
+      <p class="redirect-text">
+        Already have an account? 
+        <a href="{% url 'login' %}">Login</a>
+      </p>
+    </form>
+  </div>
+  <script src="{% static 'js/toggle_password.js' %}"></script>
+</body>
+</html>

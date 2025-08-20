@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reviewer Roles</title>
+    <link rel="stylesheet" href="{% static 'css/reviewer_roles.css' %}">
+</head>
+<body>
+<div class="form-container">
+    <h2>Reviewer Roles Information</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="submit-btn">Submit</button>
+    </form>
+</div>
+</body>
+</html>

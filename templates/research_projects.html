@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Research Project Form</title>
+  <link rel="stylesheet" href="{% static 'css/research_projects.css' %}">
+</head>
+<body>
+  <div class="form-card">
+    <h2>Research Project Form</h2>
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="form-group">
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.help_text %}
+            <small>{{ field.help_text }}</small>
+          {% endif %}
+          {% for error in field.errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endfor %}
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+</body>
+</html>

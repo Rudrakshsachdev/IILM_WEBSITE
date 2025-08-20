@@ -1,0 +1,108 @@
+/* style.css */
+
+/* General body style */
+body {
+  font-family: Arial, sans-serif;
+  /* background: linear-gradient(135deg, #6a11cb, #2575fc); */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+/* Container styling */
+.container {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  width: 360px;
+  text-align: center;
+}
+
+/* Logo Styling */
+.logo img {
+  width: 120px;
+  margin-bottom: 15px;
+  background-color: #800000;
+}
+
+/* Heading */
+h2 {
+  margin-bottom: 20px;
+  color: #800000; /* IILM Maroon */
+  font-size: 24px;
+  font-weight: bold;
+}
+
+
+/* Input fields */
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0 16px 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+/* Checkbox styling */
+input[type="checkbox"] {
+  margin-right: 6px;
+}
+
+/* Button styling */
+button {
+  background: #800000;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+  transition: 0.3s ease;
+}
+
+button:hover {
+  background: #a00000;
+}
+
+/* Links */
+a {
+  display: inline-block;
+  margin-top: 12px;
+  text-decoration: none;
+  color: #800000;
+  font-size: 14px;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Error messages */
+.error {
+  color: red;
+  font-size: 13px;
+}
+
+.alert {
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.alert-error {
+  background: #ffcccc;
+  color: #a30000;
+}
+
+.alert-success {
+  background: #ccffcc;
+  color: #006600;
+}

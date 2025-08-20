@@ -1,0 +1,130 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My Profile</title>
+    <link rel="stylesheet" href="{% static 'css/profile_completion.css' %}" />
+    <style>
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f2f2f2;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 60px auto;
+        padding: 30px;
+        background-color: white;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+      }
+
+      h1 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 30px;
+      }
+
+      .profile-info {
+        display: grid;
+        grid-template-columns: 150px auto;
+        row-gap: 20px;
+        column-gap: 40px;
+      }
+
+      .profile-info label {
+        font-weight: bold;
+        color: #555;
+        text-align: right;
+      }
+
+      .profile-info p {
+        margin: 0;
+        color: #333;
+      }
+
+      .edit-button {
+        display: block;
+        margin: 30px auto 0;
+        padding: 10px 25px;
+        background-color: #1a1a2e;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: 0.2s;
+      }
+
+      .edit-button:hover {
+        background-color: #0f0f1f;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>My Profile</h1>
+      <div class="profile-info">
+        <label>Username:</label>
+        <p>{{ user.username }}</p>
+
+        <label>Email:</label>
+        <p>{{ user.email|default:"Not specified" }}</p>
+
+        <label>First Name:</label>
+        <p>{{ user.first_name }}</p>
+
+        <label>Last Name:</label>
+        <p>{{ user.last_name }}</p>
+
+        <label>School:</label>
+        <p>{{ user.school|default:"Not specified" }}</p>
+
+        <label>Department:</label>
+        <p>{{ user.department|default:"Not specified" }}</p>
+
+        <label>Designation:</label>
+        <p>{{ user.designation|default:"Not specified" }}</p>
+
+        <label>Highest Qualification:</label>
+        <p>{{ user.highest_qualification|default:"Not specified" }}</p>
+
+        <label>Specialization:</label>
+        <p>{{ user.specialization|default:"Not specified" }}</p>
+
+        <label>ORCID ID:</label>
+        <p>{{ user.orcid_id|default:"Not specified" }}</p>
+
+        <label>Scopus ID:</label>
+        <p>{{ user.scopus_id|default:"Not specified" }}</p>
+
+        <label>Google Scholar Link:</label>
+        <p>{{ user.google_scholar_link|default:"Not specified" }}</p>
+
+        <label>Vidwaan ID:</label>
+        <p>{{ user.vidwaan_id|default:"Not specified" }}</p>
+
+        <label>Profile Picture:</label>
+        {% if user.profile_picture %}
+        <img
+          src="{{ user.profile_picture.url }}"
+          alt="Profile Picture"
+          style="width: 150px; height: 150px; border-radius: 75px"
+        />
+        {% else %}
+        <p>No profile picture uploaded.</p>
+        {% endif %}
+
+        <!-- Add more profile fields here if you have custom ones -->
+      </div>
+
+      {% comment %}
+      <form method="get" action="{% url 'edit_profile' %}">
+        <button type="submit" class="edit-button">Edit Profile</button>
+      </form>
+      {% endcomment %}
+    </div>
+  </body>
+</html>

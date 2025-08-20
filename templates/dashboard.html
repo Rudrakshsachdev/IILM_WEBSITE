@@ -1,0 +1,609 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f1f5f9;
+      }
+
+      .dashboard-container {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar-logo {
+        max-width: 160px;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+      }
+
+      .sidebar {
+        width: 250px;
+        background-color: #041e42;
+        color: #800000;
+        padding: 2rem 1rem;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .sidebar h2 {
+        margin-bottom: 2rem;
+        font-size: 1.4rem;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .sidebar ul li {
+        margin: 1rem 0;
+      }
+
+      .sidebar ul li a {
+        color: #800000;
+        text-decoration: none;
+        font-size: 1rem;
+      }
+
+      .sidebar ul li a:hover {
+        color: #800000;
+        padding-left: 8px;
+        transition: 0.3s;
+      }
+
+      .main-content {
+        flex: 1;
+        padding: 2rem 3rem;
+        background-color: #f9fafb;
+      }
+
+      header h1 {
+        margin-bottom: 1.5rem;
+      }
+
+      .cards {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .card {
+        background-color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        flex: 1;
+        text-align: center;
+      }
+
+      .card h3 {
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+        color: #374151;
+      }
+
+      .card p {
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: #1d4ed8;
+      }
+
+      .welcome-msg h2 {
+        margin-bottom: 0.2rem;
+        font-size: 1.5rem;
+      }
+
+      .welcome-msg p {
+        margin-bottom: 2rem;
+        color: #6b7280;
+      }
+
+      .personalize-container h2 {
+        margin-bottom: 0.5rem;
+        font-size: 1.4rem;
+      }
+
+      .subtext {
+        margin-bottom: 0.5rem;
+        color: #4b5563;
+      }
+
+      .progress {
+        margin-bottom: 1.5rem;
+        font-weight: bold;
+        color: #10b981;
+      }
+
+      .task-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1rem;
+      }
+
+      .task-card {
+        background-color: white;
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.06);
+        transition: 0.2s ease;
+      }
+
+      .task-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      }
+
+      .task-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+
+      .task-number {
+        background-color: #3b82f6;
+        color: white;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+
+      .task-icon {
+        font-size: 1.2rem;
+      }
+
+      .task-title {
+        font-weight: bold;
+        color: #111827;
+        margin-bottom: 0.3rem;
+      }
+
+      .task-subtitle {
+        font-size: 0.9rem;
+        color: #6b7280;
+        margin-bottom: 0.4rem;
+      }
+
+      .task-time {
+        font-size: 0.8rem;
+        color: #10b981;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar -->
+      <nav class="sidebar">
+        <div class="sidebar-logo">
+          <img
+            src="{% static 'images/iilm.png' %}"
+            alt="IILM Logo"
+            style="width: 120px; height: auto"
+          />
+        </div>
+
+        <h2>Welcome, {{ user.username }}</h2>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="{% url 'view_profile' %}">Profile</a></li>
+          <li><a href="{% url 'form_view' %}">Forms</a></li>
+          <li><a href="{% url 'submission_list' %}">All Submissions</a></li>
+          <li><a href="#">Settings</a></li>
+          <li><a href="#">Reports</a></li>
+          <li><a href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+      </nav>
+
+      <!-- Main content -->
+      <div class="main-content">
+        <header>
+          <h1>Dashboard Overview</h1>
+        </header>
+
+        <!-- Stats Section -->
+        <section class="cards">
+          <div class="card">
+            <h3>Total Logins</h3>
+            <p>23</p>
+          </div>
+          <div class="card">
+            <h3>Active Sessions</h3>
+            <p>5</p>
+          </div>
+          <div class="card">
+            <h3>Last Login</h3>
+            <p>{{ user.last_login }}</p>
+          </div>
+        </section>
+
+        <!-- Welcome Message -->
+        <section class="welcome-msg">
+          <h2>Hello {{ user.first_name|default:user.username }},</h2>
+          <p>
+            Welcome to your dashboard. Use the sidebar to navigate different
+            features.
+          </p>
+        </section>
+
+        <!-- Personalization Section -->
+        <section class="personalize-container">
+          <h2>Personalize Your Experience</h2>
+          <p class="subtext">
+            Complete all 13 quick forms to tailor the platform and unlock your
+            dashboard.
+          </p>
+
+          <div
+            style="
+              background: #e5e7eb;
+              height: 16px;
+              border-radius: 8px;
+              overflow: hidden;
+              margin-bottom: 1.5rem;
+            "
+          >
+            <div id="progress-bar"
+              style="background: #10b981; height: 100%; width: {{ percentage }}%; transition: width 0.5s;"
+              title="Progress: {{ percentage }}%"
+            ></div>
+          </div>
+
+          <div class="task-grid">
+            <!-- Task Card 1 -->
+            <div class="task-card">
+              <div class="task-header">
+                <div class="task-number">1</div>
+                <div class="task-icon" id="journal_publication_progress-icon">
+                  📄 {% if progress.journal_publication_progress %}
+                  <i
+                    class="fa fa-check-circle"
+                    style="color: green; margin-left: 5px"
+                  ></i>
+                       {% endif %}
+                </div>
+              </div>
+              <a href="{% url 'journal_publication' %}" class="task-title"
+                >Journal Publications</a
+              >
+              <div class="task-subtitle">
+                Add your journal publications and research papers
+              </div>
+              <div class="task-time">~2 min →</div>
+            </div>
+
+            <!-- Task Card 2 -->
+            <div class="task-card">
+              <div class="task-header">
+                <div class="task-number">2</div>
+                <div class="task-icon" id="conference_publication_progress-icon">
+                  📑
+                  {% if progress.conference_publications_progress %}
+        <i class="fa fa-check-circle" style="color: green; margin-left: 5px;"></i>
+      {% endif %}
+
+                </div>
+              </div>
+              <a href="{% url 'conference_publication' %}" class="task-title"
+                >Conference Publications</a
+              >
+              <div class="task-subtitle">
+                Add your conference papers and presentations
+              </div>
+              <div class="task-time">~2 min →</div>
+            </div>
+
+            <!-- Task Card 3 -->
+            <div class="task-card">
+              <div class="task-header">
+                <div class="task-number">3</div>
+                <div class="task-icon" id="research_projects_progress-icon">
+                  📑
+                  {% if progress.research_projects_progress %}
+                    <i
+                      class="fa fa-check-circle"
+                      style="color: green; margin-left: 5px"
+                    ></i>
+                  {% endif %}
+                </div>
+              </div>
+              <a href="{% url 'research_projects' %}" class="task-title"
+                >Research Projects</a
+              >
+              <div class="task-subtitle">
+                Add your ongoing and completed research projects
+              </div>
+              <div class="task-time">~2 min →</div>
+            </div>
+
+            <!-- Task Card 4 -->
+
+            <div class="task-card">
+              <div class="task-header">
+                <div class="task-number">4</div>
+                <div class="task-icon" id="patents_progress-icon">
+                  📑
+                  {% if progress.patents_progress %}
+                    <i
+                      class="fa fa-check-circle"
+                      style="color: green; margin-left: 5px"
+                    ></i>
+                  {% endif %}
+                </div>
+              </div>
+              <a href="{% url 'patents' %}" class="task-title">Patents</a>
+              <div class="task-subtitle">
+                Add your filled, published and granted patents
+              </div>
+              <div class="task-time">~2 min →</div>
+            </div>
+
+            <!-- Task Card 5 -->
+
+            <div class="task-card">
+              <div class="task-header">
+                <div class="task-number">5</div>
+                <div class="task-icon" id="copy_rights_progress-icon">
+                  📑
+                  {% if progress.copyrights_progress %}
+                    <i
+                      class="fa fa-check-circle"
+                      style="color: green; margin-left: 5px"
+                    ></i>
+                  {% endif %}
+                </div>
+              </div>
+              <a href="{% url 'copy_rights' %}" class="task-title"
+                >CopyRights</a
+              >
+              <div class="task-subtitle">
+                Add your software, manuals, and course materials CopyRights
+              </div>
+              <div class="task-time">~2 min →</div>
+            </div>
+
+            <!-- Task Card 6 -->
+            <div class="task-card">
+              <div class="task-header">
+                <div class="task-number">6</div>
+                <div class="task-icon" id="phd_guidance_progress-icon">
+                  📑
+                  {% if progress.phd_guidance_progress %}
+                    <i
+                      class="fa fa-check-circle"
+                      style="color: green; margin-left: 5px"
+                    ></i>
+                  {% endif %}
+                </div>
+              </div>
+              <a href="{% url 'phd_guidance' %}" class="task-title"
+                >Ph.D. Guidance</a
+              >
+              <div class="task-subtitle">
+                Add details about Ph.D. scholars you are supervising
+              </div>
+              <div class="task-time">~2 min →</div>
+            </div>
+
+            <!-- Task Card 7 -->
+            <div class="task-card">
+              <div class="task-header">
+                <div class="task-number">7</div>
+                <div class="task-icon" id="book_chapters_progress-icon">
+                  📑
+                  {% if progress.book_chapters_progress %}
+                    <i
+                      class="fa fa-check-circle"
+                      style="color: green; margin-left: 5px"
+                    ></i>
+                  {% endif %}
+                </div>
+              </div>
+              <a href="{% url 'book_chapter' %}" class="task-title"
+                >Book Chapters</a
+              >
+              <div class="task-subtitle">Add book chapters you've authored</div>
+              <div class="task-time">~2 min →</div>
+            </div>
+
+            <!-- Task Card 8 -->
+            <div class="task-card">
+              <div class="task-header">
+                <div class="task-number">8</div>
+                <div class="task-icon">
+                  📑
+                  {% if progress.books_progress %}
+                    <i
+                      class="fa fa-check-circle"
+                      style="color: green; margin-left: 5px"
+                    ></i>
+                  {% endif %}
+                </div>
+              </div>
+              <a href="{% url 'book' %}" class="task-title">Books</a>
+              <div class="task-subtitle">
+                Add books you have authored or edited
+              </div>
+              <div class="task-time">~2 min →</div>
+            </div>
+
+            <!-- Task Card 9 -->
+            <div class="task-card">
+              <div class="task-header">
+                <div class="task-number">9</div>
+                <div class="task-icon" id="consultancy_projects_progress-icon">
+                  📑
+                  {% if progress.consultancy_projects_progress %}
+                    <i
+                      class="fa fa-check-circle"
+                      style="color: green; margin-left: 5px"
+                    ></i>
+                  {% endif %}
+                </div>
+              </div>
+
+              <a href="{% url 'consultancy_projects' %}" class="task-title"
+                >Consultancy Projects</a
+              >
+              <div class="task-subtitle">
+                Add your industry consultancy projects and collaborations
+              </div>
+              <div class="task-time">~2 min →</div>
+            </div>
+
+            <!-- Task Card 10 -->
+            <div class="task-card">
+              <div class="task-header">
+                <div class="task-number">10</div>
+                <div class="task-icon" id="editorial_roles_progress-icon">
+                  📑
+                  {% if progress.editorial_roles_progress %}
+                    <i
+                      class="fa fa-check-circle"
+                      style="color: green; margin-left: 5px"
+                    ></i>
+                  {% endif %}
+                </div>
+              </div>
+              <a href="{% url 'editorial_roles' %}" class="task-title"
+                >Editor Roles</a
+              >
+              <div class="task-subtitle">
+                Add your editorial roles in journals and conferences
+              </div>
+              <div class="task-time">~2 min →</div>
+            </div>
+
+            <!-- Task Card 11 -->
+            <div class="task-card">
+              <div class="task-header">
+                <div class="task-number">11</div>
+                <div class="task-icon" id="reviewer_roles_progress-icon">
+                  📑
+                  {% if progress.reviewer_roles_progress %}
+                    <i
+                      class="fa fa-check-circle"
+                      style="color: green; margin-left: 5px"
+                    ></i>
+                  {% endif %}
+                </div>
+              </div>
+              <a href="{% url 'reviewer_roles' %}" class="task-title"
+                >Reviewer Roles</a
+              >
+              <div class="task-subtitle">
+                Add your roles as a reviewer for journals and conferences
+              </div>
+              <div class="task-time">~2 min →</div>
+            </div>
+
+            <!-- Task Card 12 -->
+            <div class="task-card">
+              <div class="task-header">
+                <div class="task-number">12</div>
+                <div class="task-icon" id="awards_progress-icon">
+                  📑
+                  {% if progress.awards_progress %}
+                    <i
+                      class="fa fa-check-circle"
+                      style="color: green; margin-left: 5px"
+                    ></i>
+                  {% endif %}
+                </div>
+              </div>
+              <a href="{% url 'awards' %}" class="task-title"
+                >Awards and Honors</a
+              >
+              <div class="task-subtitle">
+                Add any awards or honors you've received
+              </div>
+              <div class="task-time">~2 min →</div>
+            </div>
+
+            <!-- Task Card 13 -->
+            <div class="task-card">
+              <div class="task-header">
+                <div class="task-number">13</div>
+                <div class="task-icon" id="industry_collaboration_progress-icon">
+                  📑
+                  {% if progress.industry_collaboration_progress %}
+                    <i
+                      class="fa fa-check-circle"
+                      style="color: green; margin-left: 5px"
+                    ></i>
+                  {% endif %}
+                </div>
+              </div>
+              <a href="{% url 'industry_collaboration' %}" class="task-title"
+                >Industry Collaborations</a
+              >
+              <div class="task-subtitle">
+                Add any collaborations with industry partners or MoUs
+              </div>
+              <div class="task-time">~2 min →</div>
+            </div>
+
+            <!-- Add more task-cards here up to 13 -->
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script>
+function updateProgress(field, value) {
+    fetch("{% url 'update_progress' %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `field=${field}&value=${value}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // ✅ Update checkmark dynamically
+            const iconContainer = document.querySelector(`#${field}-icon`);
+            if (iconContainer) {
+                if (data.value) {
+                    iconContainer.innerHTML = '<i class="fa fa-check-circle" style="color: green; margin-left: 5px"></i>';
+                } else {
+                    iconContainer.innerHTML = '';
+                }
+            }
+
+            // ✅ Update progress bar
+            const progressBar = document.getElementById("progress-bar");
+            if (progressBar) {
+                progressBar.style.width = data.percent + "%";
+                progressBar.innerText = data.percent + "%";
+            }
+        }
+    });
+}
+</script>
+
+<footer>
+  <div class="footer-container">
+    <p>&copy; 2025 IILM University. All rights reserved.</p>
+  </div>
+</footer>
+  </body>
+</html>

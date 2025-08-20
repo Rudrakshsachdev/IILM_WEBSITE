@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <img src="{% static 'images/iilm_logo.png' %}" alt="IILM University Logo">
+    </div>
+    <form method="post">
+      {% csrf_token %}
+      <h2>Login</h2>
+
+      <!-- Display messages -->
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+
+      <!-- Display non-field errors -->
+      {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+          <div class="alert alert-error">{{ error }}</div>
+        {% endfor %}
+      {% endif %}
+
+      <!-- Username -->
+      {{ form.username.label }}<br>
+      {{ form.username }}<br>
+      {% if form.username.errors %}
+        {% for error in form.username.errors %}
+          <small class="error">{{ error }}</small><br>
+        {% endfor %}
+      {% endif %}
+      <br>
+
+      <!-- Password -->
+      {{ form.password.label }}<br>
+      {{ form.password }}<br>
+      {% if form.password.errors %}
+        {% for error in form.password.errors %}
+          <small class="error">{{ error }}</small><br>
+        {% endfor %}
+      {% endif %}
+      <br>
+
+      <input type="checkbox" onclick="togglePassword()"> Show Password
+      <br><br>
+      <button type="submit">Login</button><br>
+      <a href="{% url 'signup' %}">Don't have an account? Sign up</a>
+    </form>
+  </div>
+  <script src="{% static 'js/toggle_password.js' %}"></script>
+</body>
+</html> 

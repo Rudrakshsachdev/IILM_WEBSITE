@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resend OTP</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <div class="otp-form">
+    <h2>Resend OTP</h2>
+    <form method="post">
+      {% csrf_token %}
+      <label for="username">Enter your username:</label><br>
+      <input type="text" name="username" required><br><br>
+      <button type="submit">Resend OTP</button>
+    </form>
+    {% if messages %}
+      {% for message in messages %}
+        <p style="color:green;">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+  </div>
+</body>
+</html>

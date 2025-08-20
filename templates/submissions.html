@@ -1,0 +1,330 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Your Submissions</title>
+    <link rel="stylesheet" href="{% static 'css/submissions.css' %}" />
+    <h1>All Research Submissions</h1>
+
+
+<!-- Journal Publications -->
+<h2>Journal Publications</h2>
+{% if journal_pubs %}
+<table border="1">
+    <tr>
+        <th>Title</th>
+        <th>Author Position</th>
+        <th>Corresponding Author</th>
+        <th>Journal Name</th>
+        <th>Year</th>
+    </tr>
+    {% for pub in journal_pubs %}
+    <tr>
+        <td>{{ pub.title_of_paper }}</td>
+        <td>{{ pub.get_author_position_display }}</td>
+        <td>{{ pub.corresponding_author }}</td>
+        <td>{{ pub.journal_name }}</td>
+        <td>{{ pub.year_of_publication }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No journal publications found.</p>
+{% endif %}
+
+
+<!-- Conference Publications -->
+<h2>Conference Publications</h2>
+{% if conference_pubs %}
+<table border="1">
+    <tr>
+        <th>Title</th>
+        <th>Author Position</th>
+        <th>Conference Name</th>
+        <th>Date</th>
+    </tr>
+    {% for conf in conference_pubs %}
+    <tr>
+        <td>{{ conf.title_of_paper }}</td>
+        <td>{{ conf.get_author_position_display }}</td>
+        <td>{{ conf.conference_name }}</td>
+        <td>{{ conf.date_of_conference }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No conference publications found.</p>
+{% endif %}
+
+
+<!-- Research Projects -->
+<h2>Research Projects</h2>
+{% if research_projects %}
+<table border="1">
+    <tr>
+        <th>Project Title</th>
+        <th>Funding Agency</th>
+        <th>Principal Investigator</th>
+        <th>Amount</th>
+        <th>Status</th>
+    </tr>
+    {% for rp in research_projects %}
+    <tr>
+        <td>{{ rp.project_title }}</td>
+        <td>{{ rp.funding_agency }}</td>
+        <td>{{ rp.get_principal_investigator_display }}</td>
+        <td>{{ rp.amount_sanctioned }}</td>
+        <td>{{ rp.get_status_display }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No research projects found.</p>
+{% endif %}
+
+
+<!-- Patents -->
+<h2>Patents</h2>
+{% if patents %}
+<table border="1">
+    <tr>
+        <th>Title</th>
+        <th>Inventors</th>
+        <th>Status</th>
+        <th>Patent Number</th>
+    </tr>
+    {% for pt in patents %}
+    <tr>
+        <td>{{ pt.title_of_patent }}</td>
+        <td>{{ pt.investors }}</td>
+        <td>{{ pt.get_status_display }}</td>
+        <td>{{ pt.patent_number }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No patents found.</p>
+{% endif %}
+
+
+<!-- Books -->
+<h2>Books</h2>
+{% if books %}
+<table border="1">
+    <tr>
+        <th>Title</th>
+        <th>Type</th>
+        <th>Publisher</th>
+        <th>Year</th>
+    </tr>
+    {% for book in books %}
+    <tr>
+        <td>{{ book.title_of_book }}</td>
+        <td>{{ book.get_type_display }}</td>
+        <td>{{ book.publisher }}</td>
+        <td>{{ book.publication_year }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No books found.</p>
+{% endif %}
+
+
+<!-- Book Chapters -->
+<h2>Book Chapters</h2>
+{% if book_chapters %}
+<table border="1">
+    <tr>
+        <th>Chapter Title</th>
+        <th>Book Title</th>
+        <th>Publisher</th>
+        <th>Year</th>
+    </tr>
+    {% for bc in book_chapters %}
+    <tr>
+        <td>{{ bc.chap_title }}</td>
+        <td>{{ bc.book_title }}</td>
+        <td>{{ bc.publisher }}</td>
+        <td>{{ bc.publication_year }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No book chapters found.</p>
+{% endif %}
+
+
+<!-- CopyRights -->
+<h2>Copyrights</h2>
+{% if copyrights %}
+<table border="1">
+    <tr>
+        <th>Title</th>
+        <th>Type</th>
+        <th>Authors</th>
+        <th>Date of Grant</th>
+    </tr>
+    {% for c in copyrights %}
+    <tr>
+        <td>{{ c.title_of_work }}</td>
+        <td>{{ c.get_type_display }}</td>
+        <td>{{ c.authors }}</td>
+        <td>{{ c.date_of_grant }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No copyrights found.</p>
+{% endif %}
+
+
+<!-- PhD Guidance -->
+<h2>PhD Guidance</h2>
+{% if phd_guidance %}
+<table border="1">
+    <tr>
+        <th>Scholar Name</th>
+        <th>Thesis Title</th>
+        <th>Role</th>
+        <th>Status</th>
+    </tr>
+    {% for phd in phd_guidance %}
+    <tr>
+        <td>{{ phd.name_of_scholar }}</td>
+        <td>{{ phd.thesis_title }}</td>
+        <td>{{ phd.get_role_display }}</td>
+        <td>{{ phd.get_status_display }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No PhD guidance entries found.</p>
+{% endif %}
+
+
+<!-- Consultancy Projects -->
+<h2>Consultancy Projects</h2>
+{% if consultancy_projects %}
+<table border="1">
+    <tr>
+        <th>Project Title</th>
+        <th>Industry Partner</th>
+        <th>Duration</th>
+        <th>Amount Received</th>
+    </tr>
+    {% for cp in consultancy_projects %}
+    <tr>
+        <td>{{ cp.project_title }}</td>
+        <td>{{ cp.industry_partner }}</td>
+        <td>{{ cp.duration }}</td>
+        <td>{{ cp.amount_received }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No consultancy projects found.</p>
+{% endif %}
+
+
+<!-- Editorial Roles -->
+<h2>Editorial Roles</h2>
+{% if editorial_roles %}
+<table border="1">
+    <tr>
+        <th>Journal Name</th>
+        <th>Publisher</th>
+        <th>Role</th>
+        <th>From</th>
+        <th>To</th>
+    </tr>
+    {% for ed in editorial_roles %}
+    <tr>
+        <td>{{ ed.journal_name }}</td>
+        <td>{{ ed.publisher }}</td>
+        <td>{{ ed.get_editor_role_display }}</td>
+        <td>{{ ed.start_date }}</td>
+        <td>{{ ed.end_date }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No editorial roles found.</p>
+{% endif %}
+
+
+<!-- Reviewer Roles -->
+<h2>Reviewer Roles</h2>
+{% if reviewer_roles %}
+<table border="1">
+    <tr>
+        <th>Journal/Conference</th>
+        <th>Publisher</th>
+        <th>Frequency</th>
+        <th>Indexing</th>
+    </tr>
+    {% for rr in reviewer_roles %}
+    <tr>
+        <td>{{ rr.journal_name }}</td>
+        <td>{{ rr.publisher }}</td>
+        <td>{{ rr.get_freq_of_review_display }}</td>
+        <td>{{ rr.get_indexing_display }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No reviewer roles found.</p>
+{% endif %}
+
+
+<!-- Awards -->
+<h2>Awards</h2>
+{% if awards %}
+<table border="1">
+    <tr>
+        <th>Title</th>
+        <th>Awarding Body</th>
+        <th>Level</th>
+        <th>Date</th>
+    </tr>
+    {% for award in awards %}
+    <tr>
+        <td>{{ award.title_of_award }}</td>
+        <td>{{ award.awarding_body }}</td>
+        <td>{{ award.get_level_display }}</td>
+        <td>{{ award.date_of_award }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No awards found.</p>
+{% endif %}
+
+
+<!-- Industry Collaborations -->
+<h2>Industry Collaborations</h2>
+{% if industry_collaborations %}
+<table border="1">
+    <tr>
+        <th>Industry</th>
+        <th>Nature of Collaboration</th>
+        <th>Start</th>
+        <th>End</th>
+        <th>Outcome</th>
+    </tr>
+    {% for ind in industry_collaborations %}
+    <tr>
+        <td>{{ ind.industry_name }}</td>
+        <td>{{ ind.nature_of_collaborations }}</td>
+        <td>{{ ind.start_date }}</td>
+        <td>{{ ind.end_date }}</td>
+        <td>{{ ind.get_outcomes_display }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No industry collaborations found.</p>
+{% endif %}
+  </body>
+</html>

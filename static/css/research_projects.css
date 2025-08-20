@@ -1,0 +1,98 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #e1f5fe, #ffffff);
+    padding: 40px;
+    margin: 0;
+}
+
+.form-card {
+    max-width: 800px;
+    margin: auto;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #01579b;
+    font-size: 28px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    transition: border 0.3s;
+    font-size: 16px;
+}
+
+input:focus,
+select:focus {
+    border-color: #0288d1;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(2, 136, 209, 0.1);
+}
+
+small {
+    color: #666;
+    font-style: italic;
+    margin-top: 4px;
+}
+
+p {
+    color: red;
+    margin: 5px 0 0 0;
+    font-size: 14px;
+}
+
+button[type="submit"] {
+    background-color: #0277bd;
+    color: white;
+    border: none;
+    padding: 14px 20px;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.3s ease;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #01579b;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .form-card {
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    input,
+    select {
+        font-size: 15px;
+    }
+}

@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PhD Guidance</title>
+  <link rel="stylesheet" href="{% static 'css/phd_guidance.css' %}">
+</head>
+<body>
+  <div class="form-container">
+    <h2>PhD Guidance Form</h2>
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        {{ form.name_of_scholar.label_tag }}<br>
+        {{ form.name_of_scholar }}
+      </div>
+
+      <div class="form-group">
+        {{ form.outside_iilm.label_tag }}<br>
+        {{ form.outside_iilm }}
+      </div>
+
+      <div class="form-group">
+        {{ form.thesis_title.label_tag }}<br>
+        {{ form.thesis_title }}
+      </div>
+
+      <div class="form-group">
+        {{ form.role.label_tag }}<br>
+        {{ form.role }}
+      </div>
+
+      <div class="form-group">
+        {{ form.status.label_tag }}<br>
+        {{ form.status }}
+      </div>
+
+      <div class="form-group">
+        {{ form.date_of_completion.label_tag }}<br>
+        {{ form.date_of_completion }}
+      </div>
+
+      <div class="form-group">
+        {{ form.other_superviser_or_co_superviser.label_tag }}<br>
+        {{ form.other_superviser_or_co_superviser }}
+      </div>
+
+      <button type="submit" class="submit-btn">Submit</button>
+    </form>
+  </div>
+</body>
+</html>
