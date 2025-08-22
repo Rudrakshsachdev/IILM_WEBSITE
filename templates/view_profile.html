@@ -3,128 +3,605 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My Profile</title>
-    <link rel="stylesheet" href="{% static 'css/profile_completion.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <style>
+      /* CSS Variables for consistent theming */
+      :root {
+        --primary-color: #041e42;
+        --secondary-color: #800000;
+        --accent-color: #1d4ed8;
+        --success-color: #10b981;
+        --warning-color: #f59e0b;
+        --danger-color: #ef4444;
+        --light-color: #f9fafb;
+        --dark-color: #1f2937;
+        --gray-100: #f3f4f6;
+        --gray-200: #e5e7eb;
+        --gray-300: #d1d5db;
+        --gray-400: #9ca3af;
+        --gray-500: #6b7280;
+        --gray-600: #4b5563;
+        --gray-700: #374151;
+        --gray-800: #1f2937;
+        --gray-900: #111827;
+        
+        --border-radius: 12px;
+        --border-radius-lg: 16px;
+        --border-radius-xl: 20px;
+        
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        
+        --transition: all 0.3s ease;
+        --transition-slow: all 0.5s ease;
+        
+        --sidebar-width: 280px;
+      }
+
+      /* Global Reset and Base Styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
       body {
-        margin: 0;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f2f2f2;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--light-color);
+        color: var(--gray-800);
+        line-height: 1.6;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
       }
 
-      .container {
-        max-width: 800px;
-        margin: 60px auto;
-        padding: 30px;
-        background-color: white;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        border-radius: 12px;
-      }
-
-      h1 {
-        text-align: center;
-        color: #2c3e50;
-        margin-bottom: 30px;
-      }
-
-      .profile-info {
-        display: grid;
-        grid-template-columns: 150px auto;
-        row-gap: 20px;
-        column-gap: 40px;
-      }
-
-      .profile-info label {
-        font-weight: bold;
-        color: #555;
-        text-align: right;
-      }
-
-      .profile-info p {
-        margin: 0;
-        color: #333;
-      }
-
-      .edit-button {
-        display: block;
-        margin: 30px auto 0;
-        padding: 10px 25px;
-        background-color: #1a1a2e;
+      /* Header */
+      .header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #00172D 100%);
         color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 16px;
-        transition: 0.2s;
+        padding: 1.5rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: var(--shadow-md);
       }
 
-      .edit-button:hover {
-        background-color: #0f0f1f;
+      .header-content {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+      }
+
+      .logo {
+        height: 50px;
+      }
+
+      .header-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+      }
+
+      /* Main Content */
+      .main-container {
+        display: flex;
+        flex: 1;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        width: var(--sidebar-width);
+        background: linear-gradient(180deg, var(--primary-color) 0%, #00172D 100%);
+        color: white;
+        padding: 2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        box-shadow: var(--shadow-lg);
+      }
+
+      .sidebar h2 {
+        margin-bottom: 2rem;
+        font-size: 1.4rem;
+        font-weight: 600;
+        text-align: center;
+        position: relative;
+        padding-bottom: 0.5rem;
+      }
+
+      .sidebar h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 3px;
+        background: var(--secondary-color);
+        border-radius: 3px;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        padding: 0;
+        margin-top: 2rem;
+      }
+
+      .sidebar ul li {
+        margin: 0.8rem 0;
+      }
+
+      .sidebar ul li a {
+        color: rgba(255, 255, 255, 0.85);
+        text-decoration: none;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        padding: 0.8rem 1rem;
+        border-radius: 8px;
+        transition: var(--transition);
+      }
+
+      .sidebar ul li a i {
+        margin-right: 12px;
+        width: 20px;
+        text-align: center;
+      }
+
+      .sidebar ul li a:hover {
+        color: white;
+        background-color: rgba(255, 255, 255, 0.1);
+        padding-left: 1.5rem;
+      }
+
+      .sidebar ul li a.active {
+        color: white;
+        background: linear-gradient(90deg, rgba(128, 0, 0, 0.3) 0%, transparent 100%);
+        box-shadow: inset 3px 0 0 var(--secondary-color);
+      }
+
+      /* Content Area */
+      .content {
+        flex: 1;
+        padding: 2rem;
+        background-color: var(--light-color);
+      }
+
+      .page-header {
+        margin-bottom: 2rem;
+      }
+
+      .page-header h1 {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--dark-color);
+        margin-bottom: 0.5rem;
+        position: relative;
+        display: inline-block;
+      }
+
+      .page-header h1::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 50px;
+        height: 4px;
+        background: var(--secondary-color);
+        border-radius: 2px;
+      }
+
+      /* Profile Container */
+      .profile-container {
+        background: white;
+        border-radius: var(--border-radius-lg);
+        padding: 2.5rem;
+        box-shadow: var(--shadow);
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .profile-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      }
+
+      /* Profile Grid */
+      .profile-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .profile-card {
+        background: var(--gray-100);
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        transition: var(--transition);
+      }
+
+      .profile-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+      }
+
+      .profile-card-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--gray-300);
+      }
+
+      .profile-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        font-size: 1.1rem;
+      }
+
+      .profile-card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--primary-color);
+      }
+
+      .profile-detail {
+        margin-bottom: 0.75rem;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .detail-label {
+        font-size: 0.85rem;
+        color: var(--gray-600);
+        margin-bottom: 0.25rem;
+        font-weight: 500;
+      }
+
+      .detail-value {
+        font-size: 1rem;
+        color: var(--gray-800);
+        font-weight: 500;
+      }
+
+      /* Footer */
+      footer {
+        background: var(--primary-color);
+        color: white;
+        padding: 1.5rem 0;
+        text-align: center;
+        margin-top: auto;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 992px) {
+        .profile-grid {
+          grid-template-columns: 1fr;
+        }
+        
+        .sidebar {
+          width: 80px;
+          padding: 1rem 0.5rem;
+        }
+        
+        .sidebar h2 {
+          font-size: 0;
+          margin-bottom: 1rem;
+        }
+        
+        .sidebar h2::after {
+          display: none;
+        }
+        
+        .sidebar ul li a span {
+          display: none;
+        }
+        
+        .sidebar ul li a i {
+          margin-right: 0;
+          font-size: 1.2rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .main-container {
+          flex-direction: column;
+        }
+        
+        .sidebar {
+          width: 100%;
+          height: auto;
+          padding: 1rem;
+        }
+        
+        .sidebar ul {
+          display: flex;
+          overflow-x: auto;
+          margin-top: 1rem;
+          padding-bottom: 0.5rem;
+        }
+        
+        .sidebar ul li {
+          margin: 0 0.5rem;
+          white-space: nowrap;
+        }
+        
+        .sidebar ul li a {
+          padding: 0.5rem 0.75rem;
+        }
+        
+        .header {
+          flex-direction: column;
+          text-align: center;
+          gap: 1rem;
+        }
+        
+        .header-content {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        
+        .user-info {
+          margin-top: 1rem;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .content {
+          padding: 1.5rem;
+        }
+        
+        .profile-container {
+          padding: 1.5rem;
+        }
+        
+        .page-header h1 {
+          font-size: 1.8rem;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <h1>My Profile</h1>
-      <div class="profile-info">
-        <label>Username:</label>
-        <p>{{ user.username }}</p>
-
-        <label>Email:</label>
-        <p>{{ user.email|default:"Not specified" }}</p>
-
-        <label>First Name:</label>
-        <p>{{ user.first_name }}</p>
-
-        <label>Last Name:</label>
-        <p>{{ user.last_name }}</p>
-
-        <label>School:</label>
-        <p>{{ user.school|default:"Not specified" }}</p>
-
-        <label>Department:</label>
-        <p>{{ user.department|default:"Not specified" }}</p>
-
-        <label>Designation:</label>
-        <p>{{ user.designation|default:"Not specified" }}</p>
-
-        <label>Highest Qualification:</label>
-        <p>{{ user.highest_qualification|default:"Not specified" }}</p>
-
-        <label>Specialization:</label>
-        <p>{{ user.specialization|default:"Not specified" }}</p>
-
-        <label>ORCID ID:</label>
-        <p>{{ user.orcid_id|default:"Not specified" }}</p>
-
-        <label>Scopus ID:</label>
-        <p>{{ user.scopus_id|default:"Not specified" }}</p>
-
-        <label>Google Scholar Link:</label>
-        <p>{{ user.google_scholar_link|default:"Not specified" }}</p>
-
-        <label>Vidwaan ID:</label>
-        <p>{{ user.vidwaan_id|default:"Not specified" }}</p>
-
-        <label>Profile Picture:</label>
-        {% if user.profile_picture %}
-        <img
-          src="{{ user.profile_picture.url }}"
-          alt="Profile Picture"
-          style="width: 150px; height: 150px; border-radius: 75px"
-        />
-        {% else %}
-        <p>No profile picture uploaded.</p>
-        {% endif %}
-
-        <!-- Add more profile fields here if you have custom ones -->
+    <!-- Header -->
+    <div class="header">
+      <div class="header-content">
+        <img src="{% static 'images/iilm.png' %}" alt="IILM Logo" class="logo" />
+        {% comment %} <div class="header-title">Faculty Profile Management System</div> {% endcomment %}
       </div>
-
-      {% comment %}
-      <form method="get" action="{% url 'edit_profile' %}">
-        <button type="submit" class="edit-button">Edit Profile</button>
-      </form>
-      {% endcomment %}
+      <div class="user-info">
+        <div class="avatar">
+          <i class="fas fa-user"></i>
+        </div>
+        <div>{{ user.username }}</div>
+      </div>
     </div>
+
+    <div class="main-container">
+      <!-- Sidebar -->
+      <nav class="sidebar">
+        <h2>Navigation</h2>
+        <ul>
+          <li><a href="{% url 'dashboard' %}"><i class="fas fa-home"></i> <span>Home</span></a></li>
+          <li><a href="{% url 'view_profile' %}" class="active"><i class="fas fa-user"></i> <span>Profile</span></a></li>
+          <li><a href="{% url 'form_view' %}"><i class="fas fa-file-alt"></i> <span>Forms</span></a></li>
+          <li><a href="{% url 'submission_list' %}"><i class="fas fa-list"></i> <span>All Submissions</span></a></li>
+          <li><a href="#"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+          <li><a href="#"><i class="fas fa-chart-bar"></i> <span>Reports</span></a></li>
+          <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+        </ul>
+      </nav>
+
+      <!-- Content Area -->
+      <main class="content">
+        <div class="page-header">
+          <h1>My Profile</h1>
+          <p>View and manage your professional information</p>
+        </div>
+
+        <div class="profile-container">
+          <div class="profile-grid">
+            <!-- Personal Information Card -->
+            <div class="profile-card">
+              <div class="profile-card-header">
+                <div class="profile-icon">
+                  <i class="fas fa-user"></i>
+                </div>
+                <div class="profile-card-title">Personal Information</div>
+              </div>
+              
+              <div class="profile-detail">
+
+                <span class="detail-label">
+                  <label> Username:</label>
+                </span>
+                <span class="detail-value">
+                  <p>{{ user.username }}</p>
+                </span>
+              </div>
+              
+              <div class="profile-detail">
+                <span class="detail-label">
+                  <label> Email:</label>
+                </span>
+                <span class="detail-value">
+                  <p>{{ user.email }}</p>
+                </span>
+              </div>
+              
+              <div class="profile-detail">
+                <span class="detail-label">
+                  <label> First Name:</label>
+                </span>
+                <span class="detail-value">
+                  <p>{{ user.first_name }}</p>
+                </span>
+              </div>
+
+              <div class="profile-detail">
+                <span class="detail-label">
+                  <label> Last Name:</label>
+                </span>
+                <span class="detail-value">
+                  <p>{{ user.last_name }}</p>
+                </span>
+              </div>
+
+              
+            </div>
+
+            <!-- Professional Information Card -->
+            <div class="profile-card">
+              <div class="profile-card-header">
+                <div class="profile-icon">
+                  <i class="fas fa-briefcase"></i>
+                </div>
+                <div class="profile-card-title">Professional Information</div>
+              </div>
+              
+              <div class="profile-detail">
+                <span class="detail-label">
+                  <label>Designation:</label>
+                </span>
+                <span class="detail-value">
+                  <p>{{ user.designation }}</p>
+                </span>
+              </div>
+              
+              <div class="profile-detail">
+                <span class="detail-label">
+                  <label>School:</label>
+                </span>
+                <span class="detail-value">
+                  <p>{{ user.school }}</p>
+                </span>
+              </div>
+              
+              <div class="profile-detail">
+                <span class="detail-label">
+                  <label>Department:</label>
+                </span>
+                <span class="detail-value">
+                  <p>{{ user.department }}</p>
+                </span>
+              </div>
+            </div>
+
+            <!-- Academic Information Card -->
+            <div class="profile-card">
+              <div class="profile-card-header">
+                <div class="profile-icon">
+                  <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="profile-card-title">Academic Information</div>
+              </div>
+              
+              <div class="profile-detail">
+                <span class="detail-label">
+                  <label>Highest Qualification:</label>
+                </span>
+                <span class="detail-value">
+                  <p>{{ user.highest_qualification }}</p>
+                </span>
+              </div>
+              
+              <div class="profile-detail">
+                <span class="detail-label">
+                  <label>Specialization:</label>
+                </span>
+                <span class="detail-value">
+                  <p>{{ user.specialization }}</p>
+                </span>
+              </div>
+            </div>
+
+            <!-- Research Identifiers Card -->
+            <div class="profile-card">
+              <div class="profile-card-header">
+                <div class="profile-icon">
+                  <i class="fas fa-id-card"></i>
+                </div>
+                <div class="profile-card-title">Research Identifiers</div>
+              </div>
+              
+              <div class="profile-detail">
+                <span class="detail-label">
+                  <label>ORCID ID:</label>
+                </span>
+                <span class="detail-value">
+                  <p>{{ user.orcid_id }}</p>
+                </span>
+              </div>
+              
+              <div class="profile-detail">
+                <span class="detail-label">
+                  <label>Scopus ID:</label>
+                </span>
+                <span class="detail-value">
+                  <p>{{ user.scopus_id }}</p>
+                </span>
+              </div>
+
+              <div class="profile-detail">
+                <span class="detail-label">
+                  <label>Google Scholar Link:</label>
+                </span>
+                <span class="detail-value">
+                  <p>{{ user.google_scholar_link }}</p>
+                </span>
+              </div>
+
+              <div class="profile-detail">
+                <span class="detail-label">
+                  <label>Vidwaan ID:</label>
+                </span>
+                <span class="detail-value">
+                  <p>{{ user.vidwaan_id }}</p>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <footer>
+      <p>&copy; 2025 IILM University. All rights reserved.</p>
+    </footer>
   </body>
 </html>

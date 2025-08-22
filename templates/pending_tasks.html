@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pending Tasks</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+      <h2>Dashboard</h2>
+      <ul>
+          <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+          <li><a href="{% url 'new_submission' %}">New Submission</a></li>
+          <li><a href="{% url 'pending_tasks' %}">Pending Tasks</a></li>
+      </ul>
+  </div>
+
+  <!-- Content -->
+  <div class="main-content">
+      <h1>📌 Pending Tasks</h1>
+      <p>List of pending tasks will appear here.</p>
+  </div>
+</body>
+</html>

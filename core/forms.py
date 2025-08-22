@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import CustomUser, UserOTP, JournalPublication, ConferencePublication, ResearchProjects, Patents, CopyRights, PhdGuidance, BookChapter, Book, ConsultancyProjects, EditorialRoles, ReviewerRoles, Awards, IndustryCollaboration, UserFormProgress, AnnualFacultyReport, ResearchGrantApplication, ConferenceTravelRequest, PublicationsUpdate, CurriculumDevelopment
+from .models import CustomUser, UserOTP, JournalPublication, ConferencePublication, ResearchProjects, Patents, CopyRights, PhdGuidance, BookChapter, Book, ConsultancyProjects, EditorialRoles, ReviewerRoles, Awards, IndustryCollaboration, UserFormProgress, AnnualFacultyReport, ResearchGrantApplication, ConferenceTravelRequest, PublicationsUpdate, CurriculumDevelopment, FacultySubmission, SubmissionReview
 
 
 
@@ -59,15 +59,20 @@ class ProfileCompletionForm(forms.ModelForm):
     - Includes personal details (name, school, department, designation).
     - Captures academic/professional details (qualification, specialization, ORCID, Scopus ID, Google Scholar, Vidwaan ID).
     - Allows uploading a profile picture.
+    - Includes role selection for permissions.
     """
 
     class Meta:
         model = CustomUser
         fields = [
-            'first_name', 'last_name', 'school', 'department', 'designation',
+            'first_name', 'last_name', 'school', 'department', 'designation', 'role',
             'highest_qualification', 'specialization', 'orcid_id',
             'scopus_id', 'google_scholar_link', 'vidwaan_id', 'profile_picture'
         ]
+        
+        widgets = {
+            'role': forms.Select(attrs={'class': 'form-control'}),
+        }
 
 
 
@@ -839,4 +844,72 @@ class CurriculumDevelopmentForm(forms.ModelForm):
             'start_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'end_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
         }
+
+
+class SubmissionReviewForm(forms.ModelForm):
+    """
+    Form for reviewing faculty submissions
+    """
+    class Meta:
+        model = FacultySubmission
+        fields = ['status', 'review_comments']
+        widgets = {
+            'status': forms.Select(attrs={'class': 'form-control'}),
+            'review_comments': forms.Textarea(attrs={
+                'class': 'form-control', 
+                'rows': 4,
+                'placeholder': 'Enter your review comments here...'
+            }),
+        }
+
+
+class SubmissionFilterForm(forms.Form):
+    """
+    Form for filtering submissions in review dashboard
+    """
+    STATUS_CHOICES = [
+        ('', 'All Statuses'),
+        ('pending', 'Pending Review'),
+        ('under_review', 'Under Review'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+        ('needs_revision', 'Needs Revision'),
+    ]
+    
+    TYPE_CHOICES = [
+        ('', 'All Types'),
+        ('journal_publication', 'Journal Publication'),
+        ('conference_publication', 'Conference Publication'),
+        ('research_projects', 'Research Projects'),
+        ('patents', 'Patents'),
+        ('book', 'Book'),
+        ('awards', 'Awards'),
+    ]
+    
+    status = forms.ChoiceField(
+        choices=STATUS_CHOICES, 
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    submission_type = forms.ChoiceField(
+        choices=TYPE_CHOICES, 
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    department = forms.CharField(
+        max_length=100, 
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Filter by department'
+        })
+    )
+    date_from = forms.DateField(
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'})
+    )
+    date_to = forms.DateField(
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'})
+    )
         

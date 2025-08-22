@@ -1,169 +1,1366 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Faculty Forms</title>
-    <!-- Tailwind CSS CDN for styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Font - Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* Light gray background */
+      /* CSS Variables for consistent theming */
+      :root {
+        --primary-color: #041e42;
+        --secondary-color: #800000;
+        --accent-color: #1d4ed8;
+        --success-color: #10b981;
+        --warning-color: #f59e0b;
+        --danger-color: #ef4444;
+        --light-color: #f9fafb;
+        --dark-color: #1f2937;
+        --gray-100: #f3f4f6;
+        --gray-200: #e5e7eb;
+        --gray-300: #d1d5db;
+        --gray-400: #9ca3af;
+        --gray-500: #6b7280;
+        --gray-600: #4b5563;
+        --gray-700: #374151;
+        --gray-800: #1f2937;
+        --gray-900: #111827;
+
+        --border-radius: 12px;
+        --border-radius-lg: 16px;
+        --border-radius-xl: 20px;
+
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+        --transition: all 0.3s ease;
+        --transition-slow: all 0.5s ease;
+        --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+        --sidebar-width: 280px;
+        --sidebar-width-collapsed: 80px;
+        --header-height: 80px;
+      }
+
+      /* Global Reset and Base Styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--light-color);
+        color: var(--gray-800);
+        line-height: 1.6;
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
+
+      /* Smooth scrolling */
+      html {
+        scroll-behavior: smooth;
+      }
+
+      /* Dashboard Layout */
+      .dashboard-container {
+        display: flex;
+        min-height: 100vh;
+        position: relative;
+      }
+
+      /* Sidebar Styles */
+      .sidebar {
+        width: var(--sidebar-width);
+        background: linear-gradient(
+          180deg,
+          var(--primary-color) 0%,
+          #00172d 100%
+        );
+        color: white;
+        padding: 2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        height: 100vh;
+        z-index: 100;
+        transition: var(--transition);
+        box-shadow: var(--shadow-lg);
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+      }
+
+      .sidebar::-webkit-scrollbar {
+        width: 5px;
+      }
+
+      .sidebar::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+      }
+
+      .sidebar-logo {
+        max-width: 160px;
+        height: auto;
+        display: block;
+        margin: 0 auto 2rem;
+        transition: var(--transition);
+      }
+
+      .sidebar h2 {
+        margin-bottom: 2rem;
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: white;
+        text-align: center;
+        position: relative;
+        padding-bottom: 0.5rem;
+      }
+
+      .sidebar h2::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 3px;
+        background: var(--secondary-color);
+        border-radius: 3px;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        padding: 0;
+        margin-top: 2rem;
+      }
+
+      .sidebar ul li {
+        margin: 0.8rem 0;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .sidebar ul li a {
+        color: rgba(255, 255, 255, 0.85);
+        text-decoration: none;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        padding: 0.8rem 1rem;
+        border-radius: 8px;
+        transition: var(--transition);
+        position: relative;
+        z-index: 1;
+      }
+
+      .sidebar ul li a i {
+        margin-right: 12px;
+        width: 20px;
+        text-align: center;
+      }
+
+      .sidebar ul li a::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.1),
+          transparent
+        );
+        transition: var(--transition-slow);
+      }
+
+      .sidebar ul li a:hover::before {
+        left: 100%;
+      }
+
+      .sidebar ul li a:hover {
+        color: white;
+        background-color: rgba(255, 255, 255, 0.1);
+        padding-left: 1.5rem;
+        transform: translateX(5px);
+      }
+
+      .sidebar ul li a.active {
+        color: white;
+        background: linear-gradient(
+          90deg,
+          rgba(128, 0, 0, 0.3) 0%,
+          transparent 100%
+        );
+        box-shadow: inset 3px 0 0 var(--secondary-color);
+      }
+
+      /* Main Content Area */
+      .main-content {
+        flex: 1;
+        padding: 2rem 3rem;
+        background-color: var(--light-color);
+        margin-left: var(--sidebar-width);
+        transition: var(--transition);
+        min-height: 100vh;
+      }
+
+      /* Header Styles */
+      header {
+        margin-bottom: 2rem;
+        position: relative;
+      }
+
+      header h1 {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--dark-color);
+        margin-bottom: 1rem;
+        position: relative;
+        display: inline-block;
+      }
+
+      header h1::after {
+        content: "";
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 50px;
+        height: 4px;
+        background: var(--secondary-color);
+        border-radius: 2px;
+      }
+
+      header p {
+        color: var(--gray-600);
+        font-size: 1.1rem;
+      }
+
+      /* Forms Grid */
+      .forms-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1.5rem;
+      }
+
+      /* Form Card */
+      .form-card {
+        background: white;
+        border-radius: var(--border-radius-lg);
+        padding: 1.75rem;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid transparent;
+      }
+
+      .form-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          var(--accent-color),
+          var(--secondary-color)
+        );
+        opacity: 0;
+        transition: var(--transition);
+      }
+
+      .form-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+        border-color: rgba(29, 78, 216, 0.1);
+      }
+
+      .form-card:hover::before {
+        opacity: 1;
+      }
+
+      .form-card h2 {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.75rem;
+      }
+
+      .form-card > p {
+        color: var(--gray-600);
+        margin-bottom: 1rem;
+        font-weight: 500;
+      }
+
+      .form-card .description {
+        color: var(--gray-500);
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        flex-grow: 1;
+      }
+
+      .form-card .details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--gray-200);
+      }
+
+      .form-card .details div {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-card .details .label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--gray-600);
+        margin-bottom: 0.25rem;
+      }
+
+      .form-card .details .value {
+        font-size: 0.95rem;
+        color: var(--gray-800);
+        font-weight: 500;
+      }
+
+      .form-card .details .status {
+        color: var(--warning-color);
+        font-weight: 600;
+      }
+
+      .form-card a,
+      .form-card button {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          #00172d 100%
+        );
+        color: white;
+        border: none;
+        border-radius: var(--border-radius);
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: var(--transition);
+        text-align: center;
+        text-decoration: none;
+        display: block;
+      }
+
+      .form-card a:hover,
+      .form-card button:hover {
+        background: linear-gradient(
+          135deg,
+          #00172d 0%,
+          var(--primary-color) 100%
+        );
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+
+      /* Footer */
+      footer {
+        background: var(--primary-color);
+        color: white;
+        padding: 1.5rem 0;
+        text-align: center;
+        margin-left: var(--sidebar-width);
+        transition: var(--transition);
+      }
+
+      .footer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+
+      /* Menu Toggle Button */
+      .menu-toggle {
+        display: none;
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 1000;
+        background: var(--primary-color);
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow-lg);
+        cursor: pointer;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 1200px) {
+        .forms-grid {
+          grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
         }
+      }
+
+      @media (max-width: 992px) {
+        :root {
+          --sidebar-width: 80px;
+        }
+
+        .sidebar {
+          width: var(--sidebar-width);
+          padding: 1rem 0.5rem;
+        }
+
+        .sidebar-logo {
+          max-width: 50px;
+        }
+
+        .sidebar h2 {
+          font-size: 0;
+          margin-bottom: 1rem;
+        }
+
+        .sidebar h2::after {
+          display: none;
+        }
+
+        .sidebar ul li a span {
+          display: none;
+        }
+
+        .sidebar ul li a i {
+          margin-right: 0;
+          font-size: 1.2rem;
+        }
+
+        .main-content,
+        footer {
+          margin-left: var(--sidebar-width);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .main-content {
+          padding: 1.5rem;
+        }
+
+        .forms-grid {
+          grid-template-columns: 1fr;
+        }
+
+        header h1 {
+          font-size: 1.8rem;
+        }
+      }
+
+      @media (max-width: 576px) {
+        :root {
+          --sidebar-width: 0;
+        }
+
+        .sidebar {
+          transform: translateX(-100%);
+          width: 280px;
+        }
+
+        .sidebar.active {
+          transform: translateX(0);
+        }
+
+        .main-content,
+        footer {
+          margin-left: 0;
+        }
+
+        .menu-toggle {
+          display: block;
+        }
+
+        .form-card {
+          padding: 1.5rem;
+        }
+
+        .form-card .details {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1rem;
+        }
+
+        .form-card .details div {
+          width: 100%;
+        }
+
+        .form-card .details .status {
+          align-self: flex-end;
+        }
+      }
+
+      /* Dark mode support */
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --light-color: #111827;
+          --gray-100: #1f2937;
+          --gray-200: #374151;
+          --gray-300: #4b5563;
+          --gray-400: #6b7280;
+          --gray-500: #9ca3af;
+          --gray-600: #d1d5db;
+          --gray-700: #e5e7eb;
+          --gray-800: #f3f4f6;
+          --gray-900: #f9fafb;
+        }
+
+        .form-card {
+          background: var(--gray-100);
+          color: var(--gray-800);
+        }
+
+        .form-card .details {
+          border-top: 1px solid var(--gray-700);
+        }
+      }
+
+      /* Focus styles for accessibility */
+      a:focus,
+      button:focus {
+        outline: 2px solid var(--accent-color);
+        outline-offset: 2px;
+      }
+
+      /* Custom scrollbar for webkit browsers */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--gray-100);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--gray-400);
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--gray-500);
+      }
+
+      /* Status badges */
+      .status-badge {
+        text-transform: capitalize;
+        font-weight: 600;
+      }
+
+      .status-pending {
+        background: #fef3c7;
+        color: #d97706;
+      }
+
+      .status-approved {
+        background: #d1fae5;
+        color: #059669;
+      }
+
+      .status-rejected {
+        background: #fee2e2;
+        color: #dc2626;
+      }
+
+      .status-under_review {
+        background: #dbeafe;
+        color: #2563eb;
+      }
+
+      .status-needs_revision {
+        background: #fed7aa;
+        color: #ea580c;
+      }
+
+      /* Submission cards */
+      .submissions-grid .submission-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .submissions-grid .submission-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Completion cards */
+      .completion-grid .completion-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .completion-grid .completion-card:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Responsive design improvements */
+      @media (max-width: 768px) {
+        .submissions-grid {
+          grid-template-columns: 1fr !important;
+        }
+
+        .completion-grid {
+          grid-template-columns: 1fr !important;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .form-cards {
+          grid-template-columns: 1fr;
+        }
+      }
     </style>
-</head>
-<body class="antialiased">
-    <!-- Main content container -->
-    <div class="container mx-auto p-4 md:p-8 lg:p-12">
-        <!-- Header section -->
-        <header class="text-center md:text-left mb-8 md:mb-12">
-            <h1 class="text-3xl font-bold text-gray-900">Faculty Forms</h1>
-            <p class="text-gray-600 mt-2">Fill out and manage your academic submissions</p>
+  </head>
+  <body>
+    <div class="menu-toggle">
+      <i class="fas fa-bars"></i>
+    </div>
+
+    <div class="dashboard-container">
+      <!-- Sidebar -->
+      <nav class="sidebar">
+        <div class="sidebar-logo">
+          <img
+            src="{% static 'images/iilm.png' %}"
+            alt="IILM Logo"
+            style="width: 120px; height: auto"
+          />
+        </div>
+
+        <h2>Welcome, {{ user.username }}</h2>
+        <ul>
+          <li>
+            <a href="{% url 'dashboard' %}"
+              ><i class="fas fa-home"></i> <span>Home</span></a
+            >
+          </li>
+          <li>
+            <a href="{% url 'view_profile' %}"
+              ><i class="fas fa-user"></i> <span>Profile</span></a
+            >
+          </li>
+          <li>
+            <a href="{% url 'form_view' %}" class="active"
+              ><i class="fas fa-file-alt"></i> <span>Forms</span></a
+            >
+          </li>
+          <li>
+            <a href="{% url 'submission_list' %}"
+              ><i class="fas fa-list"></i> <span>All Submissions</span></a
+            >
+          </li>
+          <li>
+            <a href="#"><i class="fas fa-cog"></i> <span>Settings</span></a>
+          </li>
+          <li>
+            <a href="#"
+              ><i class="fas fa-chart-bar"></i> <span>Reports</span></a
+            >
+          </li>
+          <li>
+            <a href="{% url 'logout' %}"
+              ><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Main content -->
+      <div class="main-content">
+        <header>
+          <h1>Faculty Forms</h1>
+          <p>Fill out and manage your academic submissions</p>
         </header>
 
         <!-- Forms grid container -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-            <!-- Card: Annual Faculty Report -->
-            <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 flex flex-col justify-between">
-                <div>
-                
-                    <h2 class="text-xl font-semibold text-gray-800 mb-2">Annual Faculty Report</h2>
-                    <p class="text-gray-600 mb-4">Annual performance and achievement report</p>
-                    <p class="text-sm text-gray-500 mb-4">Submit your annual achievements, publications, research projects, and teaching activities for the academic year.</p>
-                </div>
-                <div class="mt-auto">
-                    <div class="flex justify-between items-center text-sm mb-4">
-                        <div>
-                            <span class="font-medium text-gray-700">Deadline</span>
-                            <br>
-                            <span class="text-gray-500">August 15, 2024</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="font-medium text-gray-700">Status</span>
-                            <br>
-                            <span class="text-orange-500 font-semibold">Not Submitted</span>
-                        </div>
-                    </div>
-                    <a href="{% url 'annual_faculty_report' %}" class="w-full bg-blue-800 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">Fill Form</a>
-                </div>
+        <div class="forms-grid">
+          <!-- Card: Annual Faculty Report -->
+          <div class="form-card">
+            <h2>Annual Faculty Report</h2>
+            <p>Annual performance and achievement report</p>
+            <p class="description">
+              Submit your annual achievements, publications, research projects,
+              and teaching activities for the academic year.
+            </p>
+            <div class="details">
+              <div>
+                <span class="label">Deadline</span>
+                <span class="value">August 15, 2024</span>
+              </div>
+              <div>
+                <span class="label">Status</span>
+                <span class="value status">Not Submitted</span>
+              </div>
             </div>
+            <a href="{% url 'annual_faculty_report' %}">Fill Form</a>
+          </div>
 
-            <!-- Card: Research Grant Application -->
-            <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 flex flex-col justify-between">
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-800 mb-2">Research Grant Application</h2>
-                    <p class="text-gray-600 mb-4">Internal funding request form</p>
-                    <p class="text-sm text-gray-500 mb-4">Apply for internal research funding by submitting your research proposal, budget, and expected outcomes.</p>
-                </div>
-                <div class="mt-auto">
-                    <div class="flex justify-between items-center text-sm mb-4">
-                        <div>
-                            <span class="font-medium text-gray-700">Deadline</span>
-                            <br>
-                            <span class="text-gray-500">September 30, 2024</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="font-medium text-gray-700">Status</span>
-                            <br>
-                            <span class="text-orange-500 font-semibold">Not Submitted</span>
-                        </div>
-                    </div>
-                    <a href="{% url 'research_grant_application' %}" class="w-full bg-blue-800 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">Fill Form</a>
-                </div>
+          <!-- Card: Research Grant Application -->
+          <div class="form-card">
+            <h2>Research Grant Application</h2>
+            <p>Internal funding request form</p>
+            <p class="description">
+              Apply for internal research funding by submitting your research
+              proposal, budget, and expected outcomes.
+            </p>
+            <div class="details">
+              <div>
+                <span class="label">Deadline</span>
+                <span class="value">September 30, 2024</span>
+              </div>
+              <div>
+                <span class="label">Status</span>
+                <span class="value status">Not Submitted</span>
+              </div>
             </div>
+            <a href="{% url 'research_grant_application' %}">Fill Form</a>
+          </div>
 
-            <!-- Card: Conference Travel Request -->
-            <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 flex flex-col justify-between">
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-800 mb-2">Conference Travel Request</h2>
-                    <p class="text-gray-600 mb-4">Academic travel funding request</p>
-                    <p class="text-sm text-gray-500 mb-4">Request funding for conference attendance, presenting research papers, or professional development.</p>
-                </div>
-                <div class="mt-auto">
-                    <div class="flex justify-between items-center text-sm mb-4">
-                        <div>
-                            <span class="font-medium text-gray-700">Deadline</span>
-                            <br>
-                            <span class="text-gray-500">Rolling</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="font-medium text-gray-700">Status</span>
-                            <br>
-                            <span class="text-orange-500 font-semibold">Not Submitted</span>
-                        </div>
-                    </div>
-                    <a href="{% url 'conference_travel_request' %}" class="w-full bg-blue-800 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">Fill Form</a>
-                </div>
+          <!-- Card: Conference Travel Request -->
+          <div class="form-card">
+            <h2>Conference Travel Request</h2>
+            <p>Academic travel funding request</p>
+            <p class="description">
+              Request funding for conference attendance, presenting research
+              papers, or professional development.
+            </p>
+            <div class="details">
+              <div>
+                <span class="label">Deadline</span>
+                <span class="value">Rolling</span>
+              </div>
+              <div>
+                <span class="label">Status</span>
+                <span class="value status">Not Submitted</span>
+              </div>
             </div>
+            <a href="{% url 'conference_travel_request' %}">Fill Form</a>
+          </div>
 
-            <!-- Card: Publications Update -->
-            <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 flex flex-col justify-between">
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-800 mb-2">Publications Update</h2>
-                    <p class="text-gray-600 mb-4">Record of scholarly outputs</p>
-                    <p class="text-sm text-gray-500 mb-4">Submit details about your recent publications, including articles, books, book chapters, and conference proceedings.</p>
-                </div>
-                <div class="mt-auto">
-                    <div class="flex justify-between items-center text-sm mb-4">
-                        <div>
-                            <span class="font-medium text-gray-700">Deadline</span>
-                            <br>
-                            <span class="text-gray-500">Quarterly</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="font-medium text-gray-700">Status</span>
-                            <br>
-                            <span class="text-orange-500 font-semibold">Not Submitted</span>
-                        </div>
-                    </div>
-                    <a href="{% url 'publications_update' %}" class="w-full bg-blue-800 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">Fill Form</a>
-                </div>
+          <!-- Card: Publications Update -->
+          <div class="form-card">
+            <h2>Publications Update</h2>
+            <p>Record of scholarly outputs</p>
+            <p class="description">
+              Submit details about your recent publications, including articles,
+              books, book chapters, and conference proceedings.
+            </p>
+            <div class="details">
+              <div>
+                <span class="label">Deadline</span>
+                <span class="value">Quarterly</span>
+              </div>
+              <div>
+                <span class="label">Status</span>
+                <span class="value status">Not Submitted</span>
+              </div>
             </div>
+            <a href="{% url 'publications_update' %}">Fill Form</a>
+          </div>
 
-            <!-- Card: Curriculum Development -->
-            <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 flex flex-col justify-between">
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-800 mb-2">Curriculum Development</h2>
-                    <p class="text-gray-600 mb-4">New course or curriculum proposal</p>
-                    <p class="text-sm text-gray-500 mb-4">Propose new courses, curriculum changes, or program developments with detailed syllabi and learning outcomes.</p>
-                </div>
-                <div class="mt-auto">
-                    <div class="flex justify-between items-center text-sm mb-4">
-                        <div>
-                            <span class="font-medium text-gray-700">Deadline</span>
-                            <br>
-                            <span class="text-gray-500">November 1, 2024</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="font-medium text-gray-700">Status</span>
-                            <br>
-                            <span class="text-orange-500 font-semibold">Not Submitted</span>
-                        </div>
-                    </div>
-                    <a href="{% url 'curriculum_development'%}" class="w-full bg-blue-800 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">Fill Form</a>
-                </div>
+          <!-- Card: Curriculum Development -->
+          <div class="form-card">
+            <h2>Curriculum Development</h2>
+            <p>New course or curriculum proposal</p>
+            <p class="description">
+              Propose new courses, curriculum changes, or program developments
+              with detailed syllabi and learning outcomes.
+            </p>
+            <div class="details">
+              <div>
+                <span class="label">Deadline</span>
+                <span class="value">November 1, 2024</span>
+              </div>
+              <div>
+                <span class="label">Status</span>
+                <span class="value status">Not Submitted</span>
+              </div>
             </div>
+            <a href="{% url 'curriculum_development'%}">Fill Form</a>
+          </div>
 
-            <!-- Card: View Submitted Forms -->
-            <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 flex flex-col justify-between">
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-800 mb-2">View Submitted Forms</h2>
-                    <p class="text-gray-600 mb-4">Access your previous submissions</p>
-                    <p class="text-sm text-gray-500 mb-4">View, download, or check the status of all your previously submitted forms and applications.</p>
-                </div>
-                <div class="mt-auto">
-                    <!-- No deadline or status for this card -->
-                    <button class="w-full bg-blue-800 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">View Submissions</button>
-                </div>
+          <!-- Card: View Submitted Forms -->
+          <div class="form-card">
+            <h2>View Submitted Forms</h2>
+            <p>Access your previous submissions</p>
+            <p class="description">
+              View, download, or check the status of all your previously
+              submitted forms and applications.
+            </p>
+            <div class="details">
+              <div>
+                <span class="label">Total Submissions</span>
+                <span class="value">{{ user_submissions.count }}</span>
+              </div>
+              <div>
+                <span class="label">Status</span>
+                <span class="value status"
+                  >{{ user_submissions.count }} Forms</span
+                >
+              </div>
             </div>
-
+            <a href="{% url 'my_submissions' %}">View All Submissions</a>
+          </div>
         </div>
+
+        <!-- Recent Submissions Section -->
+        {% if user_submissions %}
+        <section style="margin-top: 3rem">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 1.5rem;
+            "
+          >
+            <h2
+              style="
+                font-size: 1.8rem;
+                font-weight: 700;
+                color: var(--dark-color);
+                margin: 0;
+              "
+            >
+              Recent Submissions
+            </h2>
+            <a
+              href="{% url 'my_submissions' %}"
+              style="
+                color: var(--accent-color);
+                text-decoration: none;
+                font-weight: 600;
+              "
+              >View All →</a
+            >
+          </div>
+
+          <div
+            class="submissions-grid"
+            style="
+              display: grid;
+              grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+              gap: 1.5rem;
+            "
+          >
+            {% for submission in user_submissions %}
+            <div
+              class="submission-card"
+              style="background: white; border-radius: var(--border-radius-lg); padding: 1.5rem; box-shadow: var(--shadow); border-left: 4px solid 
+                        {% if submission.status == 'approved' %}#10b981{% elif submission.status == 'rejected' %}#ef4444{% elif submission.status == 'under_review' %}#3b82f6{% elif submission.status == 'needs_revision' %}#f59e0b{% else %}#6b7280{% endif %};"
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: start;
+                  margin-bottom: 1rem;
+                "
+              >
+                <div>
+                  <h3
+                    style="
+                      font-size: 1.1rem;
+                      font-weight: 600;
+                      color: var(--dark-color);
+                      margin: 0 0 0.5rem 0;
+                    "
+                  >
+                    {{ submission.title|truncatechars:60 }}
+                  </h3>
+                  <p
+                    style="color: var(--gray-600); font-size: 0.9rem; margin: 0"
+                  >
+                    {{ submission.get_submission_type_display }}
+                  </p>
+                </div>
+                <span
+                  class="status-badge status-{{ submission.status }}"
+                  style="
+                    padding: 0.25rem 0.75rem;
+                    border-radius: 9999px;
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                  "
+                >
+                  {{ submission.get_status_display }}
+                </span>
+              </div>
+
+              {% if submission.description %}
+              <p
+                style="
+                  color: var(--gray-600);
+                  font-size: 0.9rem;
+                  margin-bottom: 1rem;
+                  line-height: 1.4;
+                "
+              >
+                {{ submission.description|truncatechars:100 }}
+              </p>
+              {% endif %}
+
+              <div
+                style="
+                  display: flex;
+                  justify-content: between;
+                  align-items: center;
+                  font-size: 0.85rem;
+                  color: var(--gray-500);
+                "
+              >
+                <span
+                  ><i class="fas fa-calendar"></i> {{
+                  submission.submitted_at|date:"M d, Y" }}</span
+                >
+                {% if submission.reviewed_at %}
+                <span style="margin-left: auto"
+                  ><i class="fas fa-user-check"></i> Reviewed {{
+                  submission.reviewed_at|date:"M d" }}</span
+                >
+                {% endif %}
+              </div>
+
+              {% if submission.review_comments %}
+              <div
+                style="
+                  margin-top: 1rem;
+                  padding: 0.75rem;
+                  background: #f8f9fa;
+                  border-radius: 6px;
+                  border-left: 3px solid #3b82f6;
+                "
+              >
+                <p
+                  style="
+                    font-size: 0.85rem;
+                    color: var(--gray-700);
+                    margin: 0;
+                    font-style: italic;
+                  "
+                >
+                  <i class="fas fa-comment"></i> {{
+                  submission.review_comments|truncatechars:120 }}
+                </p>
+              </div>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+        </section>
+        {% endif %}
+
+        <!-- Form Completion Status Section -->
+        <section style="margin-top: 3rem">
+          <h2
+            style="
+              font-size: 1.8rem;
+              font-weight: 700;
+              color: var(--dark-color);
+              margin-bottom: 1.5rem;
+            "
+          >
+            Form Completion Status
+          </h2>
+
+          <div
+            class="completion-grid"
+            style="
+              display: grid;
+              grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+              gap: 1rem;
+            "
+          >
+            <div
+              class="completion-card"
+              style="
+                background: white;
+                border-radius: var(--border-radius);
+                padding: 1.25rem;
+                box-shadow: var(--shadow-sm);
+                border: 1px solid var(--gray-200);
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: between;
+                  align-items: center;
+                "
+              >
+                <div>
+                  <h4
+                    style="
+                      font-size: 1rem;
+                      font-weight: 600;
+                      color: var(--dark-color);
+                      margin: 0;
+                    "
+                  >
+                    Journal Publications
+                  </h4>
+                  <p
+                    style="
+                      font-size: 0.85rem;
+                      color: var(--gray-600);
+                      margin: 0.25rem 0 0 0;
+                    "
+                  >
+                    Research articles and papers
+                  </p>
+                </div>
+                <div style="text-align: right">
+                  <span
+                    style="font-size: 1.5rem; font-weight: 700; color: {% if form_submissions.journal_publications > 0 %}var(--success-color){% else %}var(--gray-400){% endif %};"
+                    >{{ form_submissions.journal_publications }}</span
+                  >
+                  <p
+                    style="
+                      font-size: 0.75rem;
+                      color: var(--gray-500);
+                      margin: 0;
+                    "
+                  >
+                    submitted
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="completion-card"
+              style="
+                background: white;
+                border-radius: var(--border-radius);
+                padding: 1.25rem;
+                box-shadow: var(--shadow-sm);
+                border: 1px solid var(--gray-200);
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: between;
+                  align-items: center;
+                "
+              >
+                <div>
+                  <h4
+                    style="
+                      font-size: 1rem;
+                      font-weight: 600;
+                      color: var(--dark-color);
+                      margin: 0;
+                    "
+                  >
+                    Conference Publications
+                  </h4>
+                  <p
+                    style="
+                      font-size: 0.85rem;
+                      color: var(--gray-600);
+                      margin: 0.25rem 0 0 0;
+                    "
+                  >
+                    Conference papers and presentations
+                  </p>
+                </div>
+                <div style="text-align: right">
+                  <span
+                    style="font-size: 1.5rem; font-weight: 700; color: {% if form_submissions.conference_publications > 0 %}var(--success-color){% else %}var(--gray-400){% endif %};"
+                    >{{ form_submissions.conference_publications }}</span
+                  >
+                  <p
+                    style="
+                      font-size: 0.75rem;
+                      color: var(--gray-500);
+                      margin: 0;
+                    "
+                  >
+                    submitted
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="completion-card"
+              style="
+                background: white;
+                border-radius: var(--border-radius);
+                padding: 1.25rem;
+                box-shadow: var(--shadow-sm);
+                border: 1px solid var(--gray-200);
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: between;
+                  align-items: center;
+                "
+              >
+                <div>
+                  <h4
+                    style="
+                      font-size: 1rem;
+                      font-weight: 600;
+                      color: var(--dark-color);
+                      margin: 0;
+                    "
+                  >
+                    Research Projects
+                  </h4>
+                  <p
+                    style="
+                      font-size: 0.85rem;
+                      color: var(--gray-600);
+                      margin: 0.25rem 0 0 0;
+                    "
+                  >
+                    Active and completed projects
+                  </p>
+                </div>
+                <div style="text-align: right">
+                  <span
+                    style="font-size: 1.5rem; font-weight: 700; color: {% if form_submissions.research_projects > 0 %}var(--success-color){% else %}var(--gray-400){% endif %};"
+                    >{{ form_submissions.research_projects }}</span
+                  >
+                  <p
+                    style="
+                      font-size: 0.75rem;
+                      color: var(--gray-500);
+                      margin: 0;
+                    "
+                  >
+                    submitted
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="completion-card"
+              style="
+                background: white;
+                border-radius: var(--border-radius);
+                padding: 1.25rem;
+                box-shadow: var(--shadow-sm);
+                border: 1px solid var(--gray-200);
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: between;
+                  align-items: center;
+                "
+              >
+                <div>
+                  <h4
+                    style="
+                      font-size: 1rem;
+                      font-weight: 600;
+                      color: var(--dark-color);
+                      margin: 0;
+                    "
+                  >
+                    Books & Chapters
+                  </h4>
+                  <p
+                    style="
+                      font-size: 0.85rem;
+                      color: var(--gray-600);
+                      margin: 0.25rem 0 0 0;
+                    "
+                  >
+                    Published books and chapters
+                  </p>
+                </div>
+                <div style="text-align: right">
+                  <span
+                    style="font-size: 1.5rem; font-weight: 700; color: {% if form_submissions.books > 0 or form_submissions.book_chapters > 0 %}var(--success-color){% else %}var(--gray-400){% endif %};"
+                    >{{
+                    form_submissions.books|add:form_submissions.book_chapters
+                    }}</span
+                  >
+                  <p
+                    style="
+                      font-size: 0.75rem;
+                      color: var(--gray-500);
+                      margin: 0;
+                    "
+                  >
+                    submitted
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="completion-card"
+              style="
+                background: white;
+                border-radius: var(--border-radius);
+                padding: 1.25rem;
+                box-shadow: var(--shadow-sm);
+                border: 1px solid var(--gray-200);
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: between;
+                  align-items: center;
+                "
+              >
+                <div>
+                  <h4
+                    style="
+                      font-size: 1rem;
+                      font-weight: 600;
+                      color: var(--dark-color);
+                      margin: 0;
+                    "
+                  >
+                    Patents & IP
+                  </h4>
+                  <p
+                    style="
+                      font-size: 0.85rem;
+                      color: var(--gray-600);
+                      margin: 0.25rem 0 0 0;
+                    "
+                  >
+                    Patents and copyrights
+                  </p>
+                </div>
+                <div style="text-align: right">
+                  <span
+                    style="font-size: 1.5rem; font-weight: 700; color: {% if form_submissions.patents > 0 or form_submissions.copyrights > 0 %}var(--success-color){% else %}var(--gray-400){% endif %};"
+                    >{{ form_submissions.patents|add:form_submissions.copyrights
+                    }}</span
+                  >
+                  <p
+                    style="
+                      font-size: 0.75rem;
+                      color: var(--gray-500);
+                      margin: 0;
+                    "
+                  >
+                    submitted
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="completion-card"
+              style="
+                background: white;
+                border-radius: var(--border-radius);
+                padding: 1.25rem;
+                box-shadow: var(--shadow-sm);
+                border: 1px solid var(--gray-200);
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: between;
+                  align-items: center;
+                "
+              >
+                <div>
+                  <h4
+                    style="
+                      font-size: 1rem;
+                      font-weight: 600;
+                      color: var(--dark-color);
+                      margin: 0;
+                    "
+                  >
+                    Awards & Recognition
+                  </h4>
+                  <p
+                    style="
+                      font-size: 0.85rem;
+                      color: var(--gray-600);
+                      margin: 0.25rem 0 0 0;
+                    "
+                  >
+                    Honors and achievements
+                  </p>
+                </div>
+                <div style="text-align: right">
+                  <span
+                    style="font-size: 1.5rem; font-weight: 700; color: {% if form_submissions.awards > 0 %}var(--success-color){% else %}var(--gray-400){% endif %};"
+                    >{{ form_submissions.awards }}</span
+                  >
+                  <p
+                    style="
+                      font-size: 0.75rem;
+                      color: var(--gray-500);
+                      margin: 0;
+                    "
+                  >
+                    submitted
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
     </div>
-</body>
+
+    <footer>
+      <div class="footer-container">
+        <p>&copy; 2025 IILM University. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      // Toggle sidebar on mobile
+      document
+        .querySelector(".menu-toggle")
+        .addEventListener("click", function () {
+          document.querySelector(".sidebar").classList.toggle("active");
+        });
+    </script>
+  </body>
 </html>

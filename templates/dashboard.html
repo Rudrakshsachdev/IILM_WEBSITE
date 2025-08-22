@@ -12,183 +12,918 @@
     />
 
     <style>
-      body {
-        margin: 0;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f1f5f9;
+      /* dashboard.css - Advanced CSS Stylesheet */
+
+      /* CSS Variables for consistent theming */
+      :root {
+        --primary-color: #041e42;
+        --secondary-color: #800000;
+        --accent-color: #1d4ed8;
+        --success-color: #10b981;
+        --warning-color: #f59e0b;
+        --danger-color: #ef4444;
+        --light-color: #f9fafb;
+        --dark-color: #1f2937;
+        --gray-100: #f3f4f6;
+        --gray-200: #e5e7eb;
+        --gray-300: #d1d5db;
+        --gray-400: #9ca3af;
+        --gray-500: #6b7280;
+        --gray-600: #4b5563;
+        --gray-700: #374151;
+        --gray-800: #1f2937;
+        --gray-900: #111827;
+
+        --border-radius: 12px;
+        --border-radius-lg: 16px;
+        --border-radius-xl: 20px;
+
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+        --transition: all 0.3s ease;
+        --transition-slow: all 0.5s ease;
+        --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+        --sidebar-width: 280px;
+        --sidebar-width-collapsed: 80px;
+        --header-height: 80px;
       }
 
+      /* Global Reset and Base Styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--light-color);
+        color: var(--gray-800);
+        line-height: 1.6;
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
+
+      /* Smooth scrolling */
+      html {
+        scroll-behavior: smooth;
+      }
+
+      /* Dashboard Layout */
       .dashboard-container {
         display: flex;
         min-height: 100vh;
+        position: relative;
+      }
+
+      /* Sidebar Styles */
+      .sidebar {
+        width: var(--sidebar-width);
+        background: linear-gradient(
+          180deg,
+          var(--primary-color) 0%,
+          #00172d 100%
+        );
+        color: white;
+        padding: 2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        height: 100vh;
+        z-index: 100;
+        transition: var(--transition);
+        box-shadow: var(--shadow-lg);
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+      }
+
+      .sidebar::-webkit-scrollbar {
+        width: 5px;
+      }
+
+      .sidebar::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
       }
 
       .sidebar-logo {
         max-width: 160px;
         height: auto;
         display: block;
-        margin: 0 auto;
-      }
-
-      .sidebar {
-        width: 250px;
-        background-color: #041e42;
-        color: #800000;
-        padding: 2rem 1rem;
-        display: flex;
-        flex-direction: column;
+        margin: 0 auto 2rem;
+        transition: var(--transition);
       }
 
       .sidebar h2 {
         margin-bottom: 2rem;
         font-size: 1.4rem;
+        font-weight: 600;
+        color: white;
+        text-align: center;
+        position: relative;
+        padding-bottom: 0.5rem;
+      }
+
+      .sidebar h2::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 3px;
+        background: var(--secondary-color);
+        border-radius: 3px;
       }
 
       .sidebar ul {
         list-style: none;
         padding: 0;
+        margin-top: 2rem;
       }
 
       .sidebar ul li {
-        margin: 1rem 0;
+        margin: 0.8rem 0;
+        position: relative;
+        overflow: hidden;
       }
 
       .sidebar ul li a {
-        color: #800000;
+        color: rgba(255, 255, 255, 0.85);
         text-decoration: none;
         font-size: 1rem;
-      }
-
-      .sidebar ul li a:hover {
-        color: #800000;
-        padding-left: 8px;
-        transition: 0.3s;
-      }
-
-      .main-content {
-        flex: 1;
-        padding: 2rem 3rem;
-        background-color: #f9fafb;
-      }
-
-      header h1 {
-        margin-bottom: 1.5rem;
-      }
-
-      .cards {
         display: flex;
-        gap: 1.5rem;
-        margin-bottom: 2rem;
+        align-items: center;
+        padding: 0.8rem 1rem;
+        border-radius: 8px;
+        transition: var(--transition);
+        position: relative;
+        z-index: 1;
       }
 
-      .card {
-        background-color: white;
-        padding: 1rem 1.5rem;
-        border-radius: 12px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        flex: 1;
+      .sidebar ul li a i {
+        margin-right: 12px;
+        width: 20px;
         text-align: center;
       }
 
-      .card h3 {
-        margin-bottom: 0.5rem;
-        font-size: 1.1rem;
-        color: #374151;
+      .sidebar ul li a::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.1),
+          transparent
+        );
+        transition: var(--transition-slow);
       }
 
-      .card p {
-        font-size: 1.4rem;
-        font-weight: bold;
-        color: #1d4ed8;
+      .sidebar ul li a:hover::before {
+        left: 100%;
       }
 
-      .welcome-msg h2 {
-        margin-bottom: 0.2rem;
-        font-size: 1.5rem;
+      .sidebar ul li a:hover {
+        color: white;
+        background-color: rgba(255, 255, 255, 0.1);
+        padding-left: 1.5rem;
+        transform: translateX(5px);
       }
 
-      .welcome-msg p {
+      .sidebar ul li a.active {
+        color: white;
+        background: linear-gradient(
+          90deg,
+          rgba(128, 0, 0, 0.3) 0%,
+          transparent 100%
+        );
+        box-shadow: inset 3px 0 0 var(--secondary-color);
+      }
+
+      /* Main Content Area */
+      .main-content {
+        flex: 1;
+        padding: 2rem 3rem;
+        background-color: var(--light-color);
+        margin-left: var(--sidebar-width);
+        transition: var(--transition);
+        min-height: 100vh;
+      }
+
+      /* Header Styles */
+      header {
         margin-bottom: 2rem;
-        color: #6b7280;
+        position: relative;
+      }
+
+      header h1 {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--dark-color);
+        margin-bottom: 1.5rem;
+        position: relative;
+        display: inline-block;
+      }
+
+      header h1::after {
+        content: "";
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 50px;
+        height: 4px;
+        background: var(--secondary-color);
+        border-radius: 2px;
+      }
+
+      /* Welcome Cards Section */
+      .welcome-cards {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+      }
+
+      .welcome-card.main-welcome {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          #00172d 100%
+        );
+        color: white;
+        padding: 2rem;
+        border-radius: var(--border-radius-lg);
+        box-shadow: var(--shadow-lg);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .welcome-card.main-welcome::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 200%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.1) 0%,
+          transparent 70%
+        );
+        transform: rotate(15deg);
+      }
+
+      .welcome-header {
+        display: flex;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      .welcome-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-right: 1.5rem;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        box-shadow: var(--shadow-md);
+        flex-shrink: 0;
+      }
+
+      .welcome-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .avatar-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.2);
+        font-size: 2rem;
+      }
+
+      .welcome-info h2 {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+      }
+
+      .designation {
+        font-size: 1.1rem;
+        margin-bottom: 0.25rem;
+        opacity: 0.9;
+      }
+
+      .department {
+        font-size: 1rem;
+        opacity: 0.8;
+      }
+
+      /* Action Cards */
+      .action-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .action-card {
+        background: white;
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .action-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5px;
+        height: 100%;
+        transition: var(--transition);
+      }
+
+      .action-card.primary::before {
+        background: var(--accent-color);
+      }
+
+      .action-card.secondary::before {
+        background: var(--success-color);
+      }
+
+      .action-card.tertiary::before {
+        background: var(--secondary-color);
+      }
+
+      .action-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .action-card:hover::before {
+        width: 8px;
+      }
+
+      .action-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1.5rem;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+      }
+
+      .action-card.primary .action-icon {
+        background: rgba(29, 78, 216, 0.1);
+        color: var(--accent-color);
+      }
+
+      .action-card.secondary .action-icon {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--success-color);
+      }
+
+      .action-card.tertiary .action-icon {
+        background: rgba(128, 0, 0, 0.1);
+        color: var(--secondary-color);
+      }
+
+      .action-content {
+        flex: 1;
+      }
+
+      .action-content h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: var(--gray-800);
+      }
+
+      .action-content p {
+        color: var(--gray-600);
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+      }
+
+      .action-link {
+        color: var(--accent-color);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.95rem;
+        display: inline-flex;
+        align-items: center;
+        transition: var(--transition);
+      }
+
+      .action-link:hover {
+        color: var(--primary-color);
+        transform: translateX(5px);
+      }
+
+      /* Personalization Section */
+      .personalize-container {
+        background: white;
+        border-radius: var(--border-radius-lg);
+        padding: 2rem;
+        box-shadow: var(--shadow);
+        margin-bottom: 2rem;
       }
 
       .personalize-container h2 {
+        font-size: 1.6rem;
         margin-bottom: 0.5rem;
-        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--gray-800);
       }
 
       .subtext {
-        margin-bottom: 0.5rem;
-        color: #4b5563;
-      }
-
-      .progress {
+        color: var(--gray-600);
         margin-bottom: 1.5rem;
-        font-weight: bold;
-        color: #10b981;
+        font-size: 1rem;
       }
 
+      /* Progress Bar */
+      .progress-container {
+        margin-bottom: 2rem;
+      }
+
+      .progress-bar-container {
+        background: var(--gray-200);
+        height: 16px;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 0.5rem;
+        position: relative;
+      }
+
+      .progress-bar {
+        background: linear-gradient(
+          90deg,
+          var(--success-color) 0%,
+          #34d399 100%
+        );
+        height: 100%;
+        width: 0;
+        border-radius: 8px;
+        transition: width 1s cubic-bezier(0.65, 0, 0.35, 1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .progress-bar::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background-image: linear-gradient(
+          -45deg,
+          rgba(255, 255, 255, 0.2) 25%,
+          transparent 25%,
+          transparent 50%,
+          rgba(255, 255, 255, 0.2) 50%,
+          rgba(255, 255, 255, 0.2) 75%,
+          transparent 75%,
+          transparent
+        );
+        z-index: 1;
+        background-size: 20px 20px;
+        animation: move 1s linear infinite;
+        border-radius: 8px;
+      }
+
+      @keyframes move {
+        0% {
+          background-position: 0 0;
+        }
+        100% {
+          background-position: 20px 0;
+        }
+      }
+
+      .progress-text {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: var(--gray-600);
+      }
+
+      /* Task Grid */
       .task-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap: 1rem;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
       }
 
       .task-card {
-        background-color: white;
-        padding: 1rem;
-        border-radius: 10px;
-        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.06);
-        transition: 0.2s ease;
+        background: white;
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+        border: 1px solid transparent;
+      }
+
+      .task-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          var(--accent-color),
+          var(--secondary-color)
+        );
+        opacity: 0;
+        transition: var(--transition);
       }
 
       .task-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+        border-color: rgba(29, 78, 216, 0.1);
+      }
+
+      .task-card:hover::before {
+        opacity: 1;
       }
 
       .task-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 0.5rem;
+        margin-bottom: 1rem;
       }
 
       .task-number {
-        background-color: #3b82f6;
+        background: var(--primary-color);
         color: white;
         border-radius: 50%;
-        width: 28px;
-        height: 28px;
+        width: 32px;
+        height: 32px;
         display: flex;
         align-items: center;
         justify-content: center;
         font-weight: bold;
+        font-size: 0.9rem;
+        box-shadow: var(--shadow-sm);
       }
 
       .task-icon {
-        font-size: 1.2rem;
+        font-size: 1.4rem;
       }
 
       .task-title {
-        font-weight: bold;
-        color: #111827;
-        margin-bottom: 0.3rem;
+        font-weight: 600;
+        color: var(--gray-800);
+        margin-bottom: 0.5rem;
+        display: block;
+        text-decoration: none;
+        font-size: 1.1rem;
+        transition: var(--transition);
+      }
+
+      .task-title:hover {
+        color: var(--accent-color);
       }
 
       .task-subtitle {
         font-size: 0.9rem;
-        color: #6b7280;
-        margin-bottom: 0.4rem;
+        color: var(--gray-600);
+        margin-bottom: 1rem;
+        line-height: 1.5;
       }
 
       .task-time {
-        font-size: 0.8rem;
-        color: #10b981;
+        font-size: 0.85rem;
+        color: var(--success-color);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+      }
+
+      .task-time::before {
+        content: "⏱";
+        margin-right: 0.5rem;
+      }
+
+      /* Footer */
+      footer {
+        background: var(--primary-color);
+        color: white;
+        padding: 1.5rem 0;
+        text-align: center;
+        margin-left: var(--sidebar-width);
+        transition: var(--transition);
+      }
+
+      .footer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+
+      /* Animation for completed tasks */
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      .task-card.completed {
+        border-left: 4px solid var(--success-color);
+      }
+
+      .task-card.completed .task-icon {
+        animation: pulse 1s ease-in-out;
+      }
+
+      /* Menu Toggle Button */
+      .menu-toggle {
+        display: none;
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 1000;
+        background: var(--primary-color);
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow-lg);
+        cursor: pointer;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 1200px) {
+        .task-grid {
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        }
+      }
+
+      @media (max-width: 992px) {
+        :root {
+          --sidebar-width: 80px;
+        }
+
+        .sidebar {
+          width: var(--sidebar-width);
+          padding: 1rem 0.5rem;
+        }
+
+        .sidebar-logo {
+          max-width: 50px;
+        }
+
+        .sidebar h2 {
+          font-size: 0;
+          margin-bottom: 1rem;
+        }
+
+        .sidebar h2::after {
+          display: none;
+        }
+
+        .sidebar ul li a span {
+          display: none;
+        }
+
+        .sidebar ul li a i {
+          margin-right: 0;
+          font-size: 1.2rem;
+        }
+
+        .main-content,
+        footer {
+          margin-left: var(--sidebar-width);
+        }
+
+        .action-cards {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .main-content {
+          padding: 1.5rem;
+        }
+
+        .welcome-header {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .welcome-avatar {
+          margin-right: 0;
+          margin-bottom: 1rem;
+        }
+
+        .task-grid {
+          grid-template-columns: 1fr;
+        }
+
+        header h1 {
+          font-size: 1.8rem;
+        }
+      }
+
+      @media (max-width: 576px) {
+        :root {
+          --sidebar-width: 0;
+        }
+
+        .sidebar {
+          transform: translateX(-100%);
+          width: 280px;
+        }
+
+        .sidebar.active {
+          transform: translateX(0);
+        }
+
+        .main-content,
+        footer {
+          margin-left: 0;
+        }
+
+        .menu-toggle {
+          display: block;
+        }
+      }
+
+      /* Dark mode support */
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --light-color: #111827;
+          --gray-100: #1f2937;
+          --gray-200: #374151;
+          --gray-300: #4b5563;
+          --gray-400: #6b7280;
+          --gray-500: #9ca3af;
+          --gray-600: #d1d5db;
+          --gray-700: #e5e7eb;
+          --gray-800: #f3f4f6;
+          --gray-900: #f9fafb;
+        }
+
+        .action-card,
+        .personalize-container,
+        .task-card {
+          background: var(--gray-100);
+          color: var(--gray-800);
+        }
+
+        .task-title {
+          color: var(--gray-800);
+        }
+      }
+
+      /* Print styles */
+      @media print {
+        .sidebar,
+        .menu-toggle {
+          display: none;
+        }
+
+        .main-content,
+        footer {
+          margin-left: 0;
+          width: 100%;
+        }
+
+        .action-card,
+        .task-card {
+          break-inside: avoid;
+        }
+
+        .task-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      /* High contrast mode support */
+      @media (prefers-contrast: high) {
+        .sidebar {
+          border-right: 3px solid white;
+        }
+
+        .action-card,
+        .task-card {
+          border: 2px solid var(--gray-300);
+        }
+      }
+
+      /* Reduced motion support */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+
+        .progress-bar::after {
+          animation: none;
+        }
+      }
+
+      /* Custom scrollbar for webkit browsers */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--gray-100);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--gray-400);
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--gray-500);
+      }
+
+      /* Focus styles for accessibility */
+      a:focus,
+      button:focus {
+        outline: 2px solid var(--accent-color);
+        outline-offset: 2px;
+      }
+
+      /* Loading animation */
+      @keyframes shimmer {
+        0% {
+          background-position: -468px 0;
+        }
+        100% {
+          background-position: 468px 0;
+        }
+      }
+
+      .loading {
+        animation-duration: 1.5s;
+        animation-fill-mode: forwards;
+        animation-iteration-count: infinite;
+        animation-name: shimmer;
+        animation-timing-function: linear;
+        background: var(--gray-200);
+        background: linear-gradient(
+          to right,
+          var(--gray-200) 8%,
+          var(--gray-300) 18%,
+          var(--gray-200) 33%
+        );
+        background-size: 800px 104px;
+        position: relative;
       }
     </style>
   </head>
   <body>
+    <div class="menu-toggle">
+      <i class="fas fa-bars"></i>
+    </div>
+
     <div class="dashboard-container">
       <!-- Sidebar -->
       <nav class="sidebar">
@@ -202,13 +937,53 @@
 
         <h2>Welcome, {{ user.username }}</h2>
         <ul>
-          <li><a href="#">Home</a></li>
-          <li><a href="{% url 'view_profile' %}">Profile</a></li>
-          <li><a href="{% url 'form_view' %}">Forms</a></li>
-          <li><a href="{% url 'submission_list' %}">All Submissions</a></li>
-          <li><a href="#">Settings</a></li>
-          <li><a href="#">Reports</a></li>
-          <li><a href="{% url 'logout' %}">Logout</a></li>
+          <li>
+            <a href="#"><i class="fas fa-home"></i> <span>Home</span></a>
+          </li>
+          <li>
+            <a href="{% url 'view_profile' %}"
+              ><i class="fas fa-user"></i> <span>Profile</span></a
+            >
+          </li>
+          <li>
+            <a href="{% url 'form_view' %}"
+              ><i class="fas fa-file-alt"></i> <span>Forms</span></a
+            >
+          </li>
+          <li>
+            <a href="{% url 'submission_list' %}"
+              ><i class="fas fa-list"></i> <span>All Submissions</span></a
+            >
+          </li>
+          <li>
+            <a href="{% url 'my_submissions' %}"
+              ><i class="fas fa-clipboard-list"></i>
+              <span>My Submissions</span></a
+            >
+          </li>
+
+          {% if user.can_review_submissions %}
+          <li>
+            <a href="{% url 'review_dashboard' %}"
+              ><i class="fas fa-clipboard-check"></i>
+              <span>Review Dashboard</span></a
+            >
+          </li>
+          {% endif %}
+
+          <li>
+            <a href="#"><i class="fas fa-cog"></i> <span>Settings</span></a>
+          </li>
+          <li>
+            <a href="#"
+              ><i class="fas fa-chart-bar"></i> <span>Reports</span></a
+            >
+          </li>
+          <li>
+            <a href="{% url 'logout' %}"
+              ><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a
+            >
+          </li>
         </ul>
       </nav>
 
@@ -218,29 +993,74 @@
           <h1>Dashboard Overview</h1>
         </header>
 
-        <!-- Stats Section -->
-        <section class="cards">
-          <div class="card">
-            <h3>Total Logins</h3>
-            <p>23</p>
+        <!-- Welcome Cards Section -->
+        <section class="welcome-cards">
+          <div class="welcome-card main-welcome">
+            <div class="welcome-header">
+              <div class="welcome-avatar">
+                {% if user.profile_picture %}
+                <img
+                  src="{{ user.profile_picture.url }}"
+                  alt="Profile Picture"
+                />
+                {% else %}
+                <div class="avatar-placeholder">
+                  <i class="fa fa-user"></i>
+                </div>
+                {% endif %}
+              </div>
+              <div class="welcome-info">
+                <h2>
+                  Welcome back, {{ user.first_name|default:user.username }}!
+                </h2>
+                <p class="designation">
+                  {{ user.designation|default:"Faculty Member" }}
+                </p>
+                <p class="department">{{ user.department|default:"" }}</p>
+              </div>
+            </div>
           </div>
-          <div class="card">
-            <h3>Active Sessions</h3>
-            <p>5</p>
-          </div>
-          <div class="card">
-            <h3>Last Login</h3>
-            <p>{{ user.last_login }}</p>
-          </div>
-        </section>
 
-        <!-- Welcome Message -->
-        <section class="welcome-msg">
-          <h2>Hello {{ user.first_name|default:user.username }},</h2>
-          <p>
-            Welcome to your dashboard. Use the sidebar to navigate different
-            features.
-          </p>
+          <div class="action-cards">
+            <div class="action-card primary">
+              <div class="action-icon">
+                <i class="fa fa-plus-circle"></i>
+              </div>
+              <div class="action-content">
+                <h3>New Submission</h3>
+                <p>Create a new form submission</p>
+                <a href="{% url 'form_view' %}" class="action-link"
+                  >Get Started →</a
+                >
+              </div>
+            </div>
+
+            <div class="action-card secondary">
+              <div class="action-icon">
+                <i class="fa fa-clipboard-list"></i>
+              </div>
+              <div class="action-content">
+                <h3>View Submissions</h3>
+                <p>Review your submitted forms</p>
+                <a href="{% url 'submission_list' %}" class="action-link"
+                  >View All →</a
+                >
+              </div>
+            </div>
+
+            <div class="action-card tertiary">
+              <div class="action-icon">
+                <i class="fa fa-user-circle"></i>
+              </div>
+              <div class="action-content">
+                <h3>Profile</h3>
+                <p>Update your information</p>
+                <a href="{% url 'view_profile' %}" class="action-link"
+                  >View Profile →</a
+                >
+              </div>
+            </div>
+          </div>
         </section>
 
         <!-- Personalization Section -->
@@ -251,24 +1071,26 @@
             dashboard.
           </p>
 
-          <div
-            style="
-              background: #e5e7eb;
-              height: 16px;
-              border-radius: 8px;
-              overflow: hidden;
-              margin-bottom: 1.5rem;
-            "
-          >
-            <div id="progress-bar"
-              style="background: #10b981; height: 100%; width: {{ percentage }}%; transition: width 0.5s;"
-              title="Progress: {{ percentage }}%"
-            ></div>
+          <div class="progress-container">
+            <div class="progress-bar-container">
+              <div
+                id="progress-bar"
+                class="progress-bar"
+                style="width: {{percent}}%;"
+                title="Progress: {{percent}}%"
+              ></div>
+            </div>
+            <div class="progress-text">
+              <span>Profile Completion</span>
+              <span>{{percent}}% Complete</span>
+            </div>
           </div>
 
           <div class="task-grid">
             <!-- Task Card 1 -->
-            <div class="task-card">
+            <div
+              class="task-card {% if progress.journal_publication_progress %}completed{% endif %}"
+            >
               <div class="task-header">
                 <div class="task-number">1</div>
                 <div class="task-icon" id="journal_publication_progress-icon">
@@ -277,7 +1099,7 @@
                     class="fa fa-check-circle"
                     style="color: green; margin-left: 5px"
                   ></i>
-                       {% endif %}
+                  {% endif %}
                 </div>
               </div>
               <a href="{% url 'journal_publication' %}" class="task-title"
@@ -290,15 +1112,21 @@
             </div>
 
             <!-- Task Card 2 -->
-            <div class="task-card">
+            <div
+              class="task-card {% if progress.conference_publication_progress %}completed{% endif %}"
+            >
               <div class="task-header">
                 <div class="task-number">2</div>
-                <div class="task-icon" id="conference_publication_progress-icon">
-                  📑
-                  {% if progress.conference_publications_progress %}
-        <i class="fa fa-check-circle" style="color: green; margin-left: 5px;"></i>
-      {% endif %}
-
+                <div
+                  class="task-icon"
+                  id="conference_publication_progress-icon"
+                >
+                  📑 {% if progress.conference_publication_progress %}
+                  <i
+                    class="fa fa-check-circle"
+                    style="color: green; margin-left: 5px"
+                  ></i>
+                  {% endif %}
                 </div>
               </div>
               <a href="{% url 'conference_publication' %}" class="task-title"
@@ -311,16 +1139,17 @@
             </div>
 
             <!-- Task Card 3 -->
-            <div class="task-card">
+            <div
+              class="task-card {% if progress.research_projects_progress %}completed{% endif %}"
+            >
               <div class="task-header">
                 <div class="task-number">3</div>
                 <div class="task-icon" id="research_projects_progress-icon">
-                  📑
-                  {% if progress.research_projects_progress %}
-                    <i
-                      class="fa fa-check-circle"
-                      style="color: green; margin-left: 5px"
-                    ></i>
+                  📑 {% if progress.research_projects_progress %}
+                  <i
+                    class="fa fa-check-circle"
+                    style="color: green; margin-left: 5px"
+                  ></i>
                   {% endif %}
                 </div>
               </div>
@@ -334,17 +1163,17 @@
             </div>
 
             <!-- Task Card 4 -->
-
-            <div class="task-card">
+            <div
+              class="task-card {% if progress.patents_progress %}completed{% endif %}"
+            >
               <div class="task-header">
                 <div class="task-number">4</div>
                 <div class="task-icon" id="patents_progress-icon">
-                  📑
-                  {% if progress.patents_progress %}
-                    <i
-                      class="fa fa-check-circle"
-                      style="color: green; margin-left: 5px"
-                    ></i>
+                  📑 {% if progress.patents_progress %}
+                  <i
+                    class="fa fa-check-circle"
+                    style="color: green; margin-left: 5px"
+                  ></i>
                   {% endif %}
                 </div>
               </div>
@@ -356,17 +1185,17 @@
             </div>
 
             <!-- Task Card 5 -->
-
-            <div class="task-card">
+            <div
+              class="task-card {% if progress.copyrights_progress %}completed{% endif %}"
+            >
               <div class="task-header">
                 <div class="task-number">5</div>
                 <div class="task-icon" id="copy_rights_progress-icon">
-                  📑
-                  {% if progress.copyrights_progress %}
-                    <i
-                      class="fa fa-check-circle"
-                      style="color: green; margin-left: 5px"
-                    ></i>
+                  📑 {% if progress.copyrights_progress %}
+                  <i
+                    class="fa fa-check-circle"
+                    style="color: green; margin-left: 5px"
+                  ></i>
                   {% endif %}
                 </div>
               </div>
@@ -380,16 +1209,17 @@
             </div>
 
             <!-- Task Card 6 -->
-            <div class="task-card">
+            <div
+              class="task-card {% if progress.phd_guidance_progress %}completed{% endif %}"
+            >
               <div class="task-header">
                 <div class="task-number">6</div>
                 <div class="task-icon" id="phd_guidance_progress-icon">
-                  📑
-                  {% if progress.phd_guidance_progress %}
-                    <i
-                      class="fa fa-check-circle"
-                      style="color: green; margin-left: 5px"
-                    ></i>
+                  📑 {% if progress.phd_guidance_progress %}
+                  <i
+                    class="fa fa-check-circle"
+                    style="color: green; margin-left: 5px"
+                  ></i>
                   {% endif %}
                 </div>
               </div>
@@ -403,16 +1233,17 @@
             </div>
 
             <!-- Task Card 7 -->
-            <div class="task-card">
+            <div
+              class="task-card {% if progress.book_chapter_progress %}completed{% endif %}"
+            >
               <div class="task-header">
                 <div class="task-number">7</div>
                 <div class="task-icon" id="book_chapters_progress-icon">
-                  📑
-                  {% if progress.book_chapters_progress %}
-                    <i
-                      class="fa fa-check-circle"
-                      style="color: green; margin-left: 5px"
-                    ></i>
+                  📑 {% if progress.book_chapter_progress %}
+                  <i
+                    class="fa fa-check-circle"
+                    style="color: green; margin-left: 5px"
+                  ></i>
                   {% endif %}
                 </div>
               </div>
@@ -424,16 +1255,17 @@
             </div>
 
             <!-- Task Card 8 -->
-            <div class="task-card">
+            <div
+              class="task-card {% if progress.book_progress %}completed{% endif %}"
+            >
               <div class="task-header">
                 <div class="task-number">8</div>
                 <div class="task-icon">
-                  📑
-                  {% if progress.books_progress %}
-                    <i
-                      class="fa fa-check-circle"
-                      style="color: green; margin-left: 5px"
-                    ></i>
+                  📑 {% if progress.book_progress %}
+                  <i
+                    class="fa fa-check-circle"
+                    style="color: green; margin-left: 5px"
+                  ></i>
                   {% endif %}
                 </div>
               </div>
@@ -449,12 +1281,11 @@
               <div class="task-header">
                 <div class="task-number">9</div>
                 <div class="task-icon" id="consultancy_projects_progress-icon">
-                  📑
-                  {% if progress.consultancy_projects_progress %}
-                    <i
-                      class="fa fa-check-circle"
-                      style="color: green; margin-left: 5px"
-                    ></i>
+                  📑 {% if progress.consultancy_projects_progress %}
+                  <i
+                    class="fa fa-check-circle"
+                    style="color: green; margin-left: 5px"
+                  ></i>
                   {% endif %}
                 </div>
               </div>
@@ -473,12 +1304,11 @@
               <div class="task-header">
                 <div class="task-number">10</div>
                 <div class="task-icon" id="editorial_roles_progress-icon">
-                  📑
-                  {% if progress.editorial_roles_progress %}
-                    <i
-                      class="fa fa-check-circle"
-                      style="color: green; margin-left: 5px"
-                    ></i>
+                  📑 {% if progress.editorial_roles_progress %}
+                  <i
+                    class="fa fa-check-circle"
+                    style="color: green; margin-left: 5px"
+                  ></i>
                   {% endif %}
                 </div>
               </div>
@@ -496,12 +1326,11 @@
               <div class="task-header">
                 <div class="task-number">11</div>
                 <div class="task-icon" id="reviewer_roles_progress-icon">
-                  📑
-                  {% if progress.reviewer_roles_progress %}
-                    <i
-                      class="fa fa-check-circle"
-                      style="color: green; margin-left: 5px"
-                    ></i>
+                  📑 {% if progress.reviewer_roles_progress %}
+                  <i
+                    class="fa fa-check-circle"
+                    style="color: green; margin-left: 5px"
+                  ></i>
                   {% endif %}
                 </div>
               </div>
@@ -519,12 +1348,11 @@
               <div class="task-header">
                 <div class="task-number">12</div>
                 <div class="task-icon" id="awards_progress-icon">
-                  📑
-                  {% if progress.awards_progress %}
-                    <i
-                      class="fa fa-check-circle"
-                      style="color: green; margin-left: 5px"
-                    ></i>
+                  📑 {% if progress.awards_progress %}
+                  <i
+                    class="fa fa-check-circle"
+                    style="color: green; margin-left: 5px"
+                  ></i>
                   {% endif %}
                 </div>
               </div>
@@ -541,13 +1369,15 @@
             <div class="task-card">
               <div class="task-header">
                 <div class="task-number">13</div>
-                <div class="task-icon" id="industry_collaboration_progress-icon">
-                  📑
-                  {% if progress.industry_collaboration_progress %}
-                    <i
-                      class="fa fa-check-circle"
-                      style="color: green; margin-left: 5px"
-                    ></i>
+                <div
+                  class="task-icon"
+                  id="industry_collaboration_progress-icon"
+                >
+                  📑 {% if progress.industry_collaboration_progress %}
+                  <i
+                    class="fa fa-check-circle"
+                    style="color: green; margin-left: 5px"
+                  ></i>
                   {% endif %}
                 </div>
               </div>
@@ -567,43 +1397,45 @@
     </div>
 
     <script>
-function updateProgress(field, value) {
-    fetch("{% url 'update_progress' %}", {
-        method: "POST",
-        headers: {
+      function updateProgress(field, value) {
+        fetch("{% url 'update_progress' %}", {
+          method: "POST",
+          headers: {
             "X-CSRFToken": "{{ csrf_token }}",
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: `field=${field}&value=${value}`
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // ✅ Update checkmark dynamically
-            const iconContainer = document.querySelector(`#${field}-icon`);
-            if (iconContainer) {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: field=${field}&value=${value},
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              // ✅ Update checkmark dynamically
+              const iconContainer = document.querySelector(#${field}-icon);
+              if (iconContainer) {
                 if (data.value) {
-                    iconContainer.innerHTML = '<i class="fa fa-check-circle" style="color: green; margin-left: 5px"></i>';
+                  iconContainer.innerHTML =
+                    '<i class="fa fa-check-circle" style="color: green; margin-left: 5px"></i>';
                 } else {
-                    iconContainer.innerHTML = '';
+                  iconContainer.innerHTML = "";
                 }
-            }
+              }
 
-            // ✅ Update progress bar
-            const progressBar = document.getElementById("progress-bar");
-            if (progressBar) {
+              // ✅ Update progress bar
+              const progressBar = document.getElementById("progress-bar");
+              if (progressBar) {
                 progressBar.style.width = data.percent + "%";
                 progressBar.innerText = data.percent + "%";
+              }
             }
-        }
-    });
-}
-</script>
+          });
+      }
+    </script>
 
-<footer>
-  <div class="footer-container">
-    <p>&copy; 2025 IILM University. All rights reserved.</p>
-  </div>
-</footer>
+    <footer>
+      <div class="footer-container">
+        <p>&copy; 2025 IILM University. All rights reserved.</p>
+      </div>
+    </footer>
+     
   </body>
 </html>

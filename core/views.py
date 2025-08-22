@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
+from django.utils import timezone
 from .forms import SignupForm, LoginForm, ProfileCompletionForm, JournalPublicationForm, ConferencePublicationForm, ResearchProjectsForm, PatentsForm, CopyRightsForm, PhdGuidanceForm, BookChapterForm, BookForm, ConsultancyProjectsForm, EditorialRolesForm, ReviewerRolesForm, AwardsForm, IndustryCollaborationForm, UserFormProgressForm, AnnualFacultyReportForm, ResearchGrantApplicationForm, ConferenceTravelRequestForm, PublicationsUpdateForm, CurriculumDevelopmentForm
 from django.core.mail import send_mail
 from django.conf import settings
@@ -9,7 +10,7 @@ from .models import UserOTP, JournalPublication
 from django.contrib import messages
 
 from .models import (
-    JournalPublication, ConferencePublication, ResearchProjects, Patents, CopyRights, PhdGuidance, BookChapter, Book, ConsultancyProjects, EditorialRoles, ReviewerRoles, Awards, IndustryCollaboration, UserFormProgress, CustomUser, AnnualFacultyReport, ResearchGrantApplication, ConferenceTravelRequest, PublicationsUpdate, CurriculumDevelopment
+    JournalPublication, ConferencePublication, ResearchProjects, Patents, CopyRights, PhdGuidance, BookChapter, Book, ConsultancyProjects, EditorialRoles, ReviewerRoles, Awards, IndustryCollaboration, UserFormProgress, CustomUser, AnnualFacultyReport, ResearchGrantApplication, ConferenceTravelRequest, PublicationsUpdate, CurriculumDevelopment, Task
 )
 
 from django.http import JsonResponse
@@ -39,7 +40,13 @@ def signup_view(request):
             email = form.cleaned_data['email']
             otp = str(random.randint(100000, 999999))
             otp_storage[email] = otp
-            send_mail('Your OTP Code', f'Your OTP is {otp}', settings.EMAIL_HOST_USER, [email])
+            send_mail(
+                subject = "OTP for First-Time Signup - IILM University",
+                message = f"Dear {form.cleaned_data['username']}\n\nWelcome to IILM University’s portal.\n\nTo complete your first-time signup, please use the One-Time Password (OTP) given below:\n\nYour OTP is {otp}\n\nThis OTP is valid for the next 5 minutes. Please do not share it with anyone for security reasons.\n\nIf you did not request this signup, please ignore this email.\n\nBest Regards, \n\nIILM University",
+                from_email = settings.EMAIL_HOST_USER,
+                recipient_list = [email],
+                fail_silently = False
+            )
             request.session['signup_data'] = request.POST
             return render(request, 'verify_otp.html', {'email': email})
     else:
@@ -136,7 +143,25 @@ def dashboard(request):
     if not user.is_authenticated:
         return redirect('login')
 
-    return render(request, 'dashboard.html', {'user': user})
+    pending_tasks_count = 0
+
+    if user.is_authenticated:
+        pending_tasks_count = Task.objects.filter(user=user, is_completed=False).count()
+
+    # Get or create user progress
+    progress, created = UserFormProgress.objects.get_or_create(user=user)
+    
+    # Calculate progress percentage
+    fields = [f.name for f in UserFormProgress._meta.get_fields() if f.name.endswith("_progress")]
+    total_fields = len(fields)
+    completed_fields = sum(getattr(progress, f) for f in fields)
+    percent = int((completed_fields / total_fields) * 100) if total_fields > 0 else 0
+
+    return render(request, 'dashboard.html', {
+        'user': user,
+        'progress': progress,
+        'percent': percent
+    })
 
 @login_required
 def profile_completion_view(request):
@@ -216,8 +241,17 @@ def journal_publication_view(request):
             journal_pub.save()
             messages.success(request, 'Journal publication details saved successfully.')
 
+            # Create submission record for review
+            create_submission_record(
+                user=request.user,
+                submission_type='journal_publication',
+                title=f"Journal Publication: {journal_pub.title_of_paper}",
+                content=form.cleaned_data,
+                description=f"Journal: {journal_pub.journal_name}"
+            )
+
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
-            progress.journal_publication = True
+            progress.journal_publication_progress = True
             progress.save()
             return redirect('dashboard')
     else:
@@ -255,7 +289,7 @@ def conference_publication_view(request):
             conference_pub.save()  # Save the form data
 
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
-            progress.conference_publication = True
+            progress.conference_publication_progress = True
             progress.save()  # Save the progress
             messages.success(request, 'Conference publication details saved successfully.')
 
@@ -294,7 +328,7 @@ def research_projects_view(request):
             research_project.save()  # Save the form data
 
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
-            progress.research_projects = True
+            progress.research_projects_progress = True
             progress.save()  # Save the progress
             messages.success(request, 'Research project details saved successfully.')
 
@@ -330,7 +364,7 @@ def patents_view(request):
             patent.save()  # Save the form data
             
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
-            progress.patents = True
+            progress.patents_progress = True
             progress.save()  # Save the progress
             messages.success(request, 'Patent details saved successfully.')
             return redirect('dashboard')
@@ -362,7 +396,7 @@ def copyrights_view(request):
             copyright.save()
 
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
-            progress.copyrights = True
+            progress.copyrights_progress = True
             progress.save()  # Save the progress
             messages.success(request, 'Copyright details saved successfully.')
             return redirect('dashboard')
@@ -394,7 +428,7 @@ def phd_guidance_view(request):
             phd_guidance.save()  # Save the form data
 
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
-            progress.phd_guidance = True
+            progress.phd_guidance_progress = True
             progress.save()  # Save the progress
             messages.success(request, 'PhD guidance details saved successfully.')
             return redirect('dashboard')
@@ -426,7 +460,7 @@ def book_chapter_view(request):
             book_chapter.save()  # Save the form data
 
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
-            progress.book_chapter = True
+            progress.book_chapter_progress = True
             progress.save()  # Save the progress
             messages.success(request, 'Book chapter details saved successfully.')
             return redirect('dashboard')
@@ -457,7 +491,7 @@ def book_view(request):
             book.save()  # Save the form data
 
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
-            progress.book = True
+            progress.book_progress = True
             progress.save()  # Save the progress
             
             messages.success(request, 'Book details saved successfully.')
@@ -490,7 +524,7 @@ def consultancy_projects_view(request):
             consultancy_project.save()  # Save the form data
             
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
-            progress.consultancy_projects = True
+            progress.consultancy_projects_progress = True
             progress.save()  # Save the progress
             messages.success(request, 'Consultancy project details saved successfully.')
             return redirect('dashboard')
@@ -522,7 +556,7 @@ def editorial_roles_view(request):
             editorial_role.save()
 
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
-            progress.editorial_roles = True
+            progress.editorial_roles_progress = True
             progress.save()
             messages.success(request, 'Editorial role details saved successfully.')
             return redirect('dashboard')
@@ -555,7 +589,7 @@ def reviewer_roles_view(request):
             reviewer_role.save()
 
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
-            progress.reviewer_roles = True
+            progress.reviewer_roles_progress = True
             progress.save()
             messages.success(request, 'Reviewer role details saved successfully.')
             return redirect('dashboard')
@@ -588,7 +622,7 @@ def awards_view(request):
             award.save()
 
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
-            progress.awards = True
+            progress.awards_progress = True
             progress.save()
             messages.success(request, 'Award details saved successfully.')
             return redirect('dashboard')
@@ -620,7 +654,7 @@ def industry_collaboration_view(request):
             industry_collaboration.save()
 
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
-            progress.industry_collaboration = True
+            progress.industry_collaboration_progress = True
             progress.save()
             messages.success(request, 'Industry collaboration details saved successfully.')
             return redirect('dashboard')
@@ -631,8 +665,48 @@ def industry_collaboration_view(request):
 
 
 def form_view(request):
+    """
+    Display form page with user's submitted forms
+    """
+    user = request.user
+    if not user.is_authenticated:
+        return redirect('login')
     
-    return render(request, 'form_page.html')
+    # Get all submissions for the current user
+    user_submissions = FacultySubmission.objects.filter(user=user).order_by('-submitted_at')[:10]
+    
+    # Get individual form submissions to show completion status
+    # Only count models that have user fields
+    form_submissions = {
+        'journal_publications': JournalPublication.objects.filter(user=user).count(),
+        'conference_publications': ConferencePublication.objects.filter(user=user).count(),
+        'research_projects': ResearchProjects.objects.filter(user=user).count(),
+        'patents': Patents.objects.filter(user=user).count(),
+        'copyrights': CopyRights.objects.filter(user=user).count(),
+        'phd_guidance': PhdGuidance.objects.filter(user=user).count(),
+        'book_chapters': BookChapter.objects.filter(user=user).count(),
+        'books': Book.objects.filter(user=user).count(),
+        'consultancy_projects': ConsultancyProjects.objects.filter(user=user).count(),
+        'editorial_roles': EditorialRoles.objects.filter(user=user).count(),
+        'reviewer_roles': ReviewerRoles.objects.filter(user=user).count(),
+        'awards': Awards.objects.filter(user=user).count(),
+        'industry_collaborations': IndustryCollaboration.objects.filter(user=user).count(),
+        # These models don't have user fields, so we'll count all instances for now
+        # TODO: Add user fields to these models in future migrations
+        'annual_reports': AnnualFacultyReport.objects.count(),
+        'research_grants': ResearchGrantApplication.objects.count(),
+        'conference_travels': ConferenceTravelRequest.objects.count(),
+        'publications_updates': PublicationsUpdate.objects.count(),
+        'curriculum_developments': CurriculumDevelopment.objects.count(),
+    }
+    
+    context = {
+        'user': user,
+        'user_submissions': user_submissions,
+        'form_submissions': form_submissions,
+    }
+    
+    return render(request, 'form_page.html', context)
 
 def annual_faculty_report_view(request):
 
@@ -657,7 +731,7 @@ def annual_faculty_report_view(request):
             annual_report.save()
 
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
-            progress.annual_faculty_report = True
+            # progress.annual_faculty_report = True  # Field not in model
             progress.save()
             messages.success(request, 'Annual faculty report details saved successfully.')
             return redirect('dashboard')
@@ -689,7 +763,7 @@ def research_grant_application_view(request):
             research_grant.save()
 
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
-            progress.research_grant_application = True
+            # progress.research_grant_application = True  # Field not in model
             progress.save()
             messages.success(request, 'Research grant application details saved successfully.')
             return redirect('dashboard')
@@ -721,7 +795,7 @@ def conference_travel_request_view(request):
             travel_request.save()
 
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
-            progress.conference_travel_request = True
+            # progress.conference_travel_request = True  # Field not in model
             progress.save()
             messages.success(request, 'Conference travel request details saved successfully.')
             return redirect('dashboard')
@@ -753,7 +827,7 @@ def publications_update_view(request):
             publications_update.save()
 
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
-            progress.publications_update = True
+            # progress.publications_update = True  # Field not in model
             progress.save()
             messages.success(request, 'Publications update details saved successfully.')
             return redirect('dashboard')
@@ -785,7 +859,7 @@ def curriculum_development_view(request):
             curriculum.save()
 
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
-            progress.curriculum_development = True
+            # progress.curriculum_development = True  # Field not in model
             progress.save()
             messages.success(request, 'Curriculum development details saved successfully.')
             return redirect('dashboard')
@@ -873,3 +947,171 @@ def update_progress(request):
             })
 
     return JsonResponse({"success": False}, status=400)
+
+
+def new_submission_view(request):
+    return render(request, 'new_submission.html')
+
+def pending_tasks_view(request):
+    return render(request, 'pending_tasks.html')
+
+
+# Review System Views
+from django.contrib.auth.decorators import user_passes_test
+from django.core.paginator import Paginator
+from .forms import SubmissionReviewForm, SubmissionFilterForm
+from .models import FacultySubmission, SubmissionReview
+
+
+def is_reviewer(user):
+    """Check if user can review submissions"""
+    return user.is_authenticated and user.can_review_submissions()
+
+
+@user_passes_test(is_reviewer)
+def review_dashboard(request):
+    """
+    Dashboard for deans and cluster heads to view submissions for review
+    """
+    filter_form = SubmissionFilterForm(request.GET)
+    submissions = FacultySubmission.objects.all()
+    
+    # Apply user-specific filtering
+    if request.user.is_cluster_head():
+        # Cluster heads see only their department submissions
+        submissions = submissions.filter(department=request.user.department)
+    elif request.user.is_dean():
+        # Deans see all submissions in their school
+        submissions = submissions.filter(school=request.user.school)
+    
+    # Apply form filters
+    if filter_form.is_valid():
+        if filter_form.cleaned_data['status']:
+            submissions = submissions.filter(status=filter_form.cleaned_data['status'])
+        if filter_form.cleaned_data['submission_type']:
+            submissions = submissions.filter(submission_type=filter_form.cleaned_data['submission_type'])
+        if filter_form.cleaned_data['department']:
+            submissions = submissions.filter(department__icontains=filter_form.cleaned_data['department'])
+        if filter_form.cleaned_data['date_from']:
+            submissions = submissions.filter(submitted_at__gte=filter_form.cleaned_data['date_from'])
+        if filter_form.cleaned_data['date_to']:
+            submissions = submissions.filter(submitted_at__lte=filter_form.cleaned_data['date_to'])
+    
+    # Pagination
+    paginator = Paginator(submissions, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    # Statistics
+    stats = {
+        'total_submissions': submissions.count(),
+        'pending_review': submissions.filter(status='pending').count(),
+        'under_review': submissions.filter(status='under_review').count(),
+        'approved': submissions.filter(status='approved').count(),
+        'rejected': submissions.filter(status='rejected').count(),
+    }
+    
+    context = {
+        'submissions': page_obj,
+        'filter_form': filter_form,
+        'stats': stats,
+        'user_role': request.user.role,
+    }
+    
+    return render(request, 'review_dashboard.html', context)
+
+
+@user_passes_test(is_reviewer)
+def submission_detail_review(request, submission_id):
+    """
+    Detailed view of a submission for review
+    """
+    submission = get_object_or_404(FacultySubmission, id=submission_id)
+    
+    # Check if user can review this submission
+    if not submission.can_be_reviewed_by(request.user):
+        messages.error(request, "You don't have permission to review this submission.")
+        return redirect('review_dashboard')
+    
+    if request.method == 'POST':
+        form = SubmissionReviewForm(request.POST, instance=submission)
+        if form.is_valid():
+            submission = form.save(commit=False)
+            submission.reviewed_by = request.user
+            submission.reviewed_at = timezone.now()
+            submission.save()
+            
+            # Create review history entry
+            SubmissionReview.objects.create(
+                submission=submission,
+                reviewer=request.user,
+                action='reviewed',
+                comments=submission.review_comments
+            )
+            
+            messages.success(request, f'Submission reviewed successfully. Status: {submission.get_status_display()}')
+            return redirect('review_dashboard')
+    else:
+        form = SubmissionReviewForm(instance=submission)
+    
+    # Get review history
+    review_history = submission.review_history.all()
+    
+    context = {
+        'submission': submission,
+        'form': form,
+        'review_history': review_history,
+    }
+    
+    return render(request, 'submission_detail_review.html', context)
+
+
+@login_required
+def my_submissions(request):
+    """
+    View for faculty to see their own submissions and their status
+    """
+    submissions = FacultySubmission.objects.filter(user=request.user)
+    
+    # Filter by status if provided
+    status_filter = request.GET.get('status')
+    if status_filter:
+        submissions = submissions.filter(status=status_filter)
+    
+    # Pagination
+    paginator = Paginator(submissions, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    # Statistics for user's submissions
+    stats = {
+        'total': submissions.count(),
+        'pending': submissions.filter(status='pending').count(),
+        'approved': submissions.filter(status='approved').count(),
+        'rejected': submissions.filter(status='rejected').count(),
+        'needs_revision': submissions.filter(status='needs_revision').count(),
+    }
+    
+    context = {
+        'submissions': page_obj,
+        'stats': stats,
+        'status_filter': status_filter,
+    }
+    
+    return render(request, 'my_submissions.html', context)
+
+
+def create_submission_record(user, submission_type, title, content, description=""):
+    """
+    Utility function to create a FacultySubmission record
+    """
+    return FacultySubmission.objects.create(
+        user=user,
+        submission_type=submission_type,
+        title=title,
+        description=description,
+        content=content,
+        department=user.department,
+        school=user.school,
+        status='pending'
+    )

@@ -1,0 +1,897 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Submissions - IILM Faculty Portal</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      /* Reuse the CSS variables from the review dashboard */
+      :root {
+        --primary-color: #041e42;
+        --secondary-color: #800000;
+        --accent-color: #1d4ed8;
+        --success-color: #10b981;
+        --warning-color: #f59e0b;
+        --danger-color: #ef4444;
+        --light-color: #f9fafb;
+        --dark-color: #1f2937;
+        --gray-100: #f3f4f6;
+        --gray-200: #e5e7eb;
+        --gray-300: #d1d5db;
+        --gray-400: #9ca3af;
+        --gray-500: #6b7280;
+        --gray-600: #4b5563;
+        --gray-700: #374151;
+        --gray-800: #1f2937;
+        --gray-900: #111827;
+        
+        --border-radius: 12px;
+        --border-radius-lg: 16px;
+        --border-radius-xl: 20px;
+        
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        
+        --transition: all 0.3s ease;
+        --transition-slow: all 0.5s ease;
+        --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        
+        --sidebar-width: 280px;
+        --sidebar-width-collapsed: 80px;
+        --header-height: 80px;
+      }
+
+      /* Global Reset and Base Styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--light-color);
+        color: var(--gray-800);
+        line-height: 1.6;
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
+
+      /* Dashboard Layout */
+      .dashboard-container {
+        display: flex;
+        min-height: 100vh;
+        position: relative;
+      }
+
+      /* Sidebar Styles */
+      .sidebar {
+        width: var(--sidebar-width);
+        background: linear-gradient(180deg, var(--primary-color) 0%, #00172D 100%);
+        color: white;
+        padding: 2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        height: 100vh;
+        z-index: 100;
+        transition: var(--transition);
+        box-shadow: var(--shadow-lg);
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+      }
+
+      .sidebar::-webkit-scrollbar {
+        width: 5px;
+      }
+
+      .sidebar::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+      }
+
+      .sidebar-logo {
+        max-width: 160px;
+        height: auto;
+        display: block;
+        margin: 0 auto 2rem;
+        transition: var(--transition);
+      }
+
+      .sidebar h2 {
+        margin-bottom: 2rem;
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: white;
+        text-align: center;
+        position: relative;
+        padding-bottom: 0.5rem;
+      }
+
+      .sidebar h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 3px;
+        background: var(--secondary-color);
+        border-radius: 3px;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        padding: 0;
+        margin-top: 2rem;
+      }
+
+      .sidebar ul li {
+        margin: 0.8rem 0;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .sidebar ul li a {
+        color: rgba(255, 255, 255, 0.85);
+        text-decoration: none;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        padding: 0.8rem 1rem;
+        border-radius: 8px;
+        transition: var(--transition);
+        position: relative;
+        z-index: 1;
+      }
+
+      .sidebar ul li a i {
+        margin-right: 12px;
+        width: 20px;
+        text-align: center;
+      }
+
+      .sidebar ul li a::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: var(--transition-slow);
+      }
+
+      .sidebar ul li a:hover::before {
+        left: 100%;
+      }
+
+      .sidebar ul li a:hover {
+        color: white;
+        background-color: rgba(255, 255, 255, 0.1);
+        padding-left: 1.5rem;
+        transform: translateX(5px);
+      }
+
+      .sidebar ul li a.active {
+        color: white;
+        background: linear-gradient(90deg, rgba(128, 0, 0, 0.3) 0%, transparent 100%);
+        box-shadow: inset 3px 0 0 var(--secondary-color);
+      }
+
+      /* Main Content Area */
+      .main-content {
+        flex: 1;
+        padding: 2rem 3rem;
+        background-color: var(--light-color);
+        margin-left: var(--sidebar-width);
+        transition: var(--transition);
+        min-height: 100vh;
+      }
+
+      /* Header Styles */
+      header {
+        margin-bottom: 2rem;
+        position: relative;
+      }
+
+      header h1 {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--dark-color);
+        margin-bottom: 1.5rem;
+        position: relative;
+        display: inline-block;
+      }
+
+      header h1::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 50px;
+        height: 4px;
+        background: var(--secondary-color);
+        border-radius: 2px;
+      }
+
+      /* My Submissions Page Styles */
+      .submissions-container {
+        max-width: 100%;
+      }
+
+      .page-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #00172D 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: var(--border-radius-lg);
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-md);
+      }
+
+      .page-header h1 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        color: white;
+      }
+
+      .page-header h1::after {
+        display: none;
+      }
+
+      .page-header p {
+        opacity: 0.9;
+        margin-bottom: 0.25rem;
+      }
+
+      /* Statistics Grid */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        text-align: center;
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
+        opacity: 0;
+        transition: var(--transition);
+      }
+
+      .stat-card:hover::before {
+        opacity: 1;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .stat-number {
+        font-size: 2.25rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+      }
+
+      /* Filter Tabs */
+      .filter-tabs {
+        display: flex;
+        background: white;
+        border-radius: var(--border-radius);
+        padding: 0.5rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow);
+        gap: 0.5rem;
+      }
+
+      .filter-tab {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        border: none;
+        background: none;
+        color: var(--gray-600);
+        cursor: pointer;
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+        text-align: center;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .filter-tab:hover {
+        background: var(--gray-100);
+      }
+
+      .filter-tab.active {
+        background: var(--primary-color);
+        color: white;
+      }
+
+      /* Submissions Grid */
+      .submissions-grid {
+        display: grid;
+        gap: 1.5rem;
+      }
+
+      .submission-card {
+        background: white;
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+      }
+
+      .submission-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .submission-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+      }
+
+      .submission-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--dark-color);
+        margin: 0 0 0.5rem 0;
+      }
+
+      .submission-type {
+        background: var(--gray-100);
+        color: var(--gray-700);
+        padding: 0.4rem 0.9rem;
+        border-radius: 9999px;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+
+      .submission-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--gray-200);
+      }
+
+      .submission-date {
+        color: var(--gray-500);
+        font-size: 0.875rem;
+      }
+
+      .status-badge {
+        padding: 0.4rem 0.9rem;
+        border-radius: 9999px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: inline-block;
+      }
+
+      .status-pending {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      .status-approved {
+        background: #d1fae5;
+        color: #065f46;
+      }
+
+      .status-rejected {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .status-under_review {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+
+      .status-needs_revision {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: var(--gray-500);
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+      }
+
+      .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: var(--gray-300);
+      }
+
+      /* Buttons */
+      .btn {
+        padding: 0.6rem 1.25rem;
+        border: none;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: var(--transition);
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #00172D 100%);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: linear-gradient(135deg, #00172D 0%, var(--primary-color) 100%);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+
+      /* Pagination */
+      .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 2rem;
+      }
+
+      .pagination a,
+      .pagination span {
+        padding: 0.6rem 1rem;
+        border: 1px solid var(--gray-300);
+        border-radius: var(--border-radius);
+        text-decoration: none;
+        color: var(--gray-700);
+        font-weight: 500;
+        transition: var(--transition);
+      }
+
+      .pagination a:hover {
+        background: var(--gray-100);
+        border-color: var(--gray-400);
+      }
+
+      .pagination .current {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+      }
+
+      /* Footer */
+      footer {
+        background: var(--primary-color);
+        color: white;
+        padding: 1.5rem 0;
+        text-align: center;
+        margin-left: var(--sidebar-width);
+        transition: var(--transition);
+      }
+
+      .footer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+
+      /* Menu Toggle Button */
+      .menu-toggle {
+        display: none;
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 1000;
+        background: var(--primary-color);
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow-lg);
+        cursor: pointer;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 1200px) {
+        .stats-grid {
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        }
+      }
+
+      @media (max-width: 992px) {
+        :root {
+          --sidebar-width: 80px;
+        }
+        
+        .sidebar {
+          width: var(--sidebar-width);
+          padding: 1rem 0.5rem;
+        }
+        
+        .sidebar-logo {
+          max-width: 50px;
+        }
+        
+        .sidebar h2 {
+          font-size: 0;
+          margin-bottom: 1rem;
+        }
+        
+        .sidebar h2::after {
+          display: none;
+        }
+        
+        .sidebar ul li a span {
+          display: none;
+        }
+        
+        .sidebar ul li a i {
+          margin-right: 0;
+          font-size: 1.2rem;
+        }
+        
+        .main-content, footer {
+          margin-left: var(--sidebar-width);
+        }
+        
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .main-content {
+          padding: 1.5rem;
+        }
+        
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+        
+        .filter-tabs {
+          flex-direction: column;
+        }
+        
+        .page-header h1 {
+          font-size: 1.8rem;
+        }
+        
+        .submission-header {
+          flex-direction: column;
+          gap: 1rem;
+        }
+        
+        .submission-meta {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.5rem;
+        }
+      }
+
+      @media (max-width: 576px) {
+        :root {
+          --sidebar-width: 0;
+        }
+        
+        .sidebar {
+          transform: translateX(-100%);
+          width: 280px;
+        }
+        
+        .sidebar.active {
+          transform: translateX(0);
+        }
+        
+        .main-content, footer {
+          margin-left: 0;
+        }
+        
+        .menu-toggle {
+          display: block;
+        }
+        
+        .page-header {
+          padding: 1.5rem;
+        }
+      }
+
+      /* Dark mode support */
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --light-color: #111827;
+          --gray-100: #1f2937;
+          --gray-200: #374151;
+          --gray-300: #4b5563;
+          --gray-400: #6b7280;
+          --gray-500: #9ca3af;
+          --gray-600: #d1d5db;
+          --gray-700: #e5e7eb;
+          --gray-800: #f3f4f6;
+          --gray-900: #f9fafb;
+        }
+        
+        .stat-card,
+        .filter-tabs,
+        .submission-card,
+        .empty-state {
+          background: var(--gray-100);
+          color: var(--gray-800);
+        }
+        
+        .submission-meta {
+          border-top: 1px solid var(--gray-700);
+        }
+        
+        .submission-type {
+          background: var(--gray-200);
+          color: var(--gray-800);
+        }
+      }
+
+      /* Focus styles for accessibility */
+      a:focus, button:focus, select:focus, input:focus {
+        outline: 2px solid var(--accent-color);
+        outline-offset: 2px;
+      }
+
+      /* Custom scrollbar for webkit browsers */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--gray-100);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--gray-400);
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--gray-500);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="menu-toggle">
+      <i class="fas fa-bars"></i>
+    </div>
+
+    <div class="dashboard-container">
+      <!-- Sidebar -->
+      <nav class="sidebar">
+        <div class="sidebar-logo">
+          <img
+            src="{% static 'images/iilm.png' %}"
+            alt="IILM Logo"
+            style="width: 120px; height: auto"
+          />
+        </div>
+
+        <h2>Welcome, {{ user.username }}</h2>
+        <ul>
+          <li><a href="{% url 'dashboard' %}"><i class="fas fa-home"></i> <span>Home</span></a></li>
+          <li><a href="{% url 'view_profile' %}"><i class="fas fa-user"></i> <span>Profile</span></a></li>
+          <li><a href="{% url 'form_view' %}"><i class="fas fa-file-alt"></i> <span>Forms</span></a></li>
+          <li><a href="{% url 'submission_list' %}"><i class="fas fa-list"></i> <span>All Submissions</span></a></li>
+          <li><a href="{% url 'review_dashboard' %}"><i class="fas fa-clipboard-check"></i> <span>Review Dashboard</span></a></li>
+          <li><a href="{% url 'my_submissions' %}" class="active"><i class="fas fa-file-export"></i> <span>My Submissions</span></a></li>
+          <li><a href="#"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+          <li><a href="#"><i class="fas fa-chart-bar"></i> <span>Reports</span></a></li>
+          <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+        </ul>
+      </nav>
+
+      <!-- Main content -->
+      <div class="main-content">
+        <div class="submissions-container">
+          <div class="page-header">
+            <h1><i class="fas fa-file-alt"></i> My Submissions</h1>
+            <p>Track the status of your submitted forms and documents</p>
+          </div>
+
+          <!-- Statistics -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number">{{ stats.total }}</div>
+              <div>Total Submissions</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">{{ stats.pending }}</div>
+              <div>Pending</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">{{ stats.approved }}</div>
+              <div>Approved</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">{{ stats.rejected }}</div>
+              <div>Rejected</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">{{ stats.needs_revision }}</div>
+              <div>Needs Revision</div>
+            </div>
+          </div>
+
+          <!-- Filter Tabs -->
+          <div class="filter-tabs">
+            <a
+              href="{% url 'my_submissions' %}"
+              class="filter-tab {% if not status_filter %}active{% endif %}"
+            >
+              All Submissions
+            </a>
+            <a
+              href="{% url 'my_submissions' %}?status=pending"
+              class="filter-tab {% if status_filter == 'pending' %}active{% endif %}"
+            >
+              Pending
+            </a>
+            <a
+              href="{% url 'my_submissions' %}?status=approved"
+              class="filter-tab {% if status_filter == 'approved' %}active{% endif %}"
+            >
+              Approved
+            </a>
+            <a
+              href="{% url 'my_submissions' %}?status=rejected"
+              class="filter-tab {% if status_filter == 'rejected' %}active{% endif %}"
+            >
+              Rejected
+            </a>
+          </div>
+
+          <!-- Submissions -->
+          <div class="submissions-grid">
+            {% for submission in submissions %}
+            <div class="submission-card">
+              <div class="submission-header">
+                <div>
+                  <h3 class="submission-title">{{ submission.title }}</h3>
+                  {% if submission.description %}
+                  <p style="color: var(--gray-500); margin: 0">
+                    {{ submission.description|truncatechars:100 }}
+                  </p>
+                  {% endif %}
+                </div>
+                <span class="submission-type"
+                  >{{ submission.get_submission_type_display }}</span
+                >
+              </div>
+
+              {% if submission.review_comments %}
+              <div
+                style="
+                  background: var(--gray-100);
+                  padding: 1rem;
+                  border-radius: var(--border-radius);
+                  margin: 1rem 0;
+                  color: var(--gray-700);
+                "
+              >
+                <strong>Review Comments:</strong>
+                <p style="margin: 0.5rem 0 0 0;">
+                  {{ submission.review_comments }}
+                </p>
+              </div>
+              {% endif %}
+
+              <div class="submission-meta">
+                <span class="submission-date">
+                  <i class="fas fa-calendar"></i> {{ submission.submitted_at|date:"M d, Y" }}
+                </span>
+                <span class="status-badge status-{{ submission.status }}">
+                  {{ submission.get_status_display }}
+                </span>
+              </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+              <i class="fas fa-inbox"></i>
+              <h3>No Submissions Found</h3>
+              <p>
+                You haven't made any submissions yet.
+                <a href="{% url 'form_view' %}" style="color: var(--accent-color);">Create your first submission</a>
+              </p>
+            </div>
+            {% endfor %}
+          </div>
+
+          <!-- Pagination -->
+          {% if submissions.has_other_pages %}
+          <div class="pagination">
+            {% if submissions.has_previous %}
+            <a
+              href="?page=1{% if status_filter %}&status={{ status_filter }}{% endif %}"
+              >&laquo; first</a
+            >
+            <a
+              href="?page={{ submissions.previous_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}"
+              >previous</a
+            >
+            {% endif %}
+
+            <span class="current">
+              Page {{ submissions.number }} of {{ submissions.paginator.num_pages }}
+            </span>
+
+            {% if submissions.has_next %}
+            <a
+              href="?page={{ submissions.next_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}"
+              >next</a
+            >
+            <a
+              href="?page={{ submissions.paginator.num_pages }}{% if status_filter %}&status={{ status_filter }}{% endif %}"
+              >last &raquo;</a
+            >
+            {% endif %}
+          </div>
+          {% endif %}
+
+          <div style="text-align: center; margin-top: 2rem">
+            <a
+              href="{% url 'dashboard' %}"
+              class="btn btn-primary"
+            >
+              <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="footer-container">
+        <p>&copy; 2025 IILM University. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      // Toggle sidebar on mobile
+      document.querySelector('.menu-toggle').addEventListener('click', function() {
+        document.querySelector('.sidebar').classList.toggle('active');
+      });
+    </script>
+  </body>
+</html>

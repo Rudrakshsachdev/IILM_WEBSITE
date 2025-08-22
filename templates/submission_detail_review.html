@@ -1,0 +1,338 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Review Submission - IILM Faculty Portal</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .review-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .review-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+      }
+
+      .submission-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .submission-meta {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+      }
+
+      .meta-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .meta-label {
+        font-weight: 600;
+        color: #6b7280;
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .meta-value {
+        color: #374151;
+        font-size: 1rem;
+      }
+
+      .content-section {
+        margin-bottom: 2rem;
+      }
+
+      .content-section h3 {
+        color: #374151;
+        border-bottom: 2px solid #e5e7eb;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .json-display {
+        background: #f3f4f6;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        padding: 1rem;
+        font-family: "Courier New", monospace;
+        white-space: pre-wrap;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      .review-form {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-label {
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+        display: block;
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 1rem;
+      }
+
+      .form-control:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.2s;
+      }
+
+      .btn-primary {
+        background: #3b82f6;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #2563eb;
+      }
+
+      .btn-secondary {
+        background: #6b7280;
+        color: white;
+      }
+
+      .btn-secondary:hover {
+        background: #4b5563;
+      }
+
+      .review-history {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .history-item {
+        border-left: 4px solid #e5e7eb;
+        padding-left: 1rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+      }
+
+      .history-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .history-item.reviewed {
+        border-left-color: #3b82f6;
+      }
+
+      .history-item.approved {
+        border-left-color: #10b981;
+      }
+
+      .history-item.rejected {
+        border-left-color: #ef4444;
+      }
+
+      .history-date {
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
+
+      .history-action {
+        font-weight: 600;
+        color: #374151;
+        margin: 0.25rem 0;
+      }
+
+      .history-comment {
+        color: #4b5563;
+        font-style: italic;
+      }
+
+      .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+
+      .status-pending {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      .status-approved {
+        background: #d1fae5;
+        color: #065f46;
+      }
+
+      .status-rejected {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .status-under_review {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+
+      .status-needs_revision {
+        background: #fde68a;
+        color: #92400e;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="review-container">
+      <div class="review-header">
+        <h1><i class="fas fa-clipboard-check"></i> Review Submission</h1>
+        <p>Detailed review of faculty submission</p>
+      </div>
+
+      <!-- Submission Details -->
+      <div class="submission-content">
+        <div class="submission-meta">
+          <div class="meta-item">
+            <span class="meta-label">Title</span>
+            <span class="meta-value">{{ submission.title }}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Faculty</span>
+            <span class="meta-value"
+              >{{ submission.user.first_name }} {{ submission.user.last_name
+              }}</span
+            >
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Type</span>
+            <span class="meta-value"
+              >{{ submission.get_submission_type_display }}</span
+            >
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Department</span>
+            <span class="meta-value"
+              >{{ submission.department|default:"N/A" }}</span
+            >
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Status</span>
+            <span class="status-badge status-{{ submission.status }}">
+              {{ submission.get_status_display }}
+            </span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Submitted</span>
+            <span class="meta-value"
+              >{{ submission.submitted_at|date:"M d, Y H:i" }}</span
+            >
+          </div>
+        </div>
+
+        {% if submission.description %}
+        <div class="content-section">
+          <h3><i class="fas fa-align-left"></i> Description</h3>
+          <p>{{ submission.description }}</p>
+        </div>
+        {% endif %}
+
+        <div class="content-section">
+          <h3><i class="fas fa-database"></i> Submission Content</h3>
+          <div class="json-display">{{ submission.content|pprint }}</div>
+        </div>
+      </div>
+
+      <!-- Review Form -->
+      <div class="review-form">
+        <h2><i class="fas fa-pen"></i> Submit Review</h2>
+        <form method="post">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="{{ form.status.id_for_label }}" class="form-label"
+              >Review Status</label
+            >
+            {{ form.status }}
+          </div>
+          <div class="form-group">
+            <label
+              for="{{ form.review_comments.id_for_label }}"
+              class="form-label"
+              >Review Comments</label
+            >
+            {{ form.review_comments }}
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-check"></i> Submit Review
+            </button>
+            <a href="{% url 'review_dashboard' %}" class="btn btn-secondary">
+              <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+          </div>
+        </form>
+      </div>
+
+      <!-- Review History -->
+      {% if review_history %}
+      <div class="review-history">
+        <h2><i class="fas fa-history"></i> Review History</h2>
+        {% for review in review_history %}
+        <div class="history-item {{ review.action }}">
+          <div class="history-date">
+            {{ review.created_at|date:"M d, Y H:i" }}
+          </div>
+          <div class="history-action">
+            {{ review.get_action_display }} by {{ review.reviewer.first_name }}
+            {{ review.reviewer.last_name }}
+          </div>
+          {% if review.comments %}
+          <div class="history-comment">"{{ review.comments }}"</div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </body>
+</html>

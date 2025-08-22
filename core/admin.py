@@ -2,7 +2,7 @@ from django.contrib import admin
 from core.models import (
     CustomUser, UserOTP, JournalPublication, ConferencePublication, ResearchProjects,
     Patents, CopyRights, PhdGuidance, BookChapter, Book, ConsultancyProjects,
-    EditorialRoles, ReviewerRoles, Awards, IndustryCollaboration, UserFormProgress, AnnualFacultyReport, ResearchGrantApplication, ConferenceTravelRequest, PublicationsUpdate, CurriculumDevelopment
+    EditorialRoles, ReviewerRoles, Awards, IndustryCollaboration, UserFormProgress, AnnualFacultyReport, ResearchGrantApplication, ConferenceTravelRequest, PublicationsUpdate, CurriculumDevelopment, Task
 )
 
 admin.site.register(CustomUser)
@@ -26,3 +26,4 @@ admin.site.register(ResearchGrantApplication)
 admin.site.register(ConferenceTravelRequest)
 admin.site.register(PublicationsUpdate)
 admin.site.register(CurriculumDevelopment)
+admin.site.register(Task)

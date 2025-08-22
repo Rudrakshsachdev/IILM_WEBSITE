@@ -12,9 +12,18 @@ class CustomUser(AbstractUser):
     Custom user model for the faculty portal.
     """
 
+    # Role choices
+    ROLE_CHOICES = [
+        ('faculty', 'Faculty'),
+        ('cluster_head', 'Cluster Head'),
+        ('dean', 'Dean'),
+        ('admin', 'Admin'),
+    ]
+
     school = models.CharField(max_length=100, blank=True, null=True)
     department = models.CharField(max_length=100, blank=True, null=True)
     designation = models.CharField(max_length=100, blank=True, null=True)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='faculty')
     highest_qualification = models.CharField(max_length=100, blank=True, null=True)
     specialization = models.CharField(max_length=100, blank=True, null=True)
     orcid_id = models.CharField(max_length=100, blank=True, null=True)
@@ -23,6 +32,15 @@ class CustomUser(AbstractUser):
     vidwaan_id = models.CharField(max_length=100, blank=True, null=True)
     profile_picture = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
     is_profile_complete = models.BooleanField(default=False)
+
+    def is_dean(self):
+        return self.role == 'dean'
+    
+    def is_cluster_head(self):
+        return self.role == 'cluster_head'
+    
+    def can_review_submissions(self):
+        return self.role in ['dean', 'cluster_head', 'admin']
 
 
 
@@ -623,28 +641,28 @@ class UserFormProgress(models.Model):
     awards_progress = models.BooleanField(default=False)
     industry_collaboration_progress = models.BooleanField(default=False)
 
-    def calculate_progress(self):
-        fields = [
-            self.journal_publication_progress,
-            self.conference_publication_progress,
-            self.research_projects_progress,
-            self.patents_progress,
-            self.copyrights_progress,
-            self.phd_guidance_progress,
-            self.book_chapter_progress,
-            self.book_progress,
-            self.consultancy_projects_progress,
-            self.editorial_roles_progress,
-            self.reviewer_roles_progress,
-            self.awards_progress,
-            self.industry_collaboration_progress,
-        ]
-        total = len(fields)
-        completed = sum(1 for f in fields if f)
-        return int((completed / total) * 100)
+    # def calculate_progress(self):
+    #     fields = [
+    #         self.journal_publication_progress,
+    #         self.conference_publication_progress,
+    #         self.research_projects_progress,
+    #         self.patents_progress,
+    #         self.copyrights_progress,
+    #         self.phd_guidance_progress,
+    #         self.book_chapter_progress,
+    #         self.book_progress,
+    #         self.consultancy_projects_progress,
+    #         self.editorial_roles_progress,
+    #         self.reviewer_roles_progress,
+    #         self.awards_progress,
+    #         self.industry_collaboration_progress,
+    #     ]
+    #     total = len(fields)
+    #     completed = sum(1 for f in fields if f)
+    #     return int((completed / total) * 100)
     
-    def __str__(self):
-        return f"{self.user.username} - {self.calculate_progress()}%"
+    # def __str__(self):
+    #     return f"{self.user.username} - {self.calculate_progress()}%"
     
 
 class AnnualFacultyReport(models.Model):
@@ -761,3 +779,156 @@ class CurriculumDevelopment(models.Model):
     program_attachments = models.FileField(upload_to='curriculum_development/attachments/', blank=True, null=True, help_text="Upload any additional attachments for the program")
 
     dean_approval = models.BooleanField(default=False, help_text="I confirm that I have obtained the necessary approvals for this program.")
+
+
+class Task(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    is_completed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+
+class SubmissionType(models.Model):
+    """
+    Model to define different types of submissions
+    """
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField(blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    
+    def __str__(self):
+        return self.name
+
+
+class FacultySubmission(models.Model):
+    """
+    Unified model to track all faculty submissions for review
+    """
+    STATUS_CHOICES = [
+        ('pending', 'Pending Review'),
+        ('under_review', 'Under Review'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+        ('needs_revision', 'Needs Revision'),
+    ]
+    
+    SUBMISSION_TYPE_CHOICES = [
+        ('journal_publication', 'Journal Publication'),
+        ('conference_publication', 'Conference Publication'),
+        ('research_projects', 'Research Projects'),
+        ('patents', 'Patents'),
+        ('copyrights', 'Copyrights'),
+        ('phd_guidance', 'PhD Guidance'),
+        ('book_chapter', 'Book Chapter'),
+        ('book', 'Book'),
+        ('consultancy_projects', 'Consultancy Projects'),
+        ('editorial_roles', 'Editorial Roles'),
+        ('reviewer_roles', 'Reviewer Roles'),
+        ('awards', 'Awards'),
+        ('industry_collaboration', 'Industry Collaboration'),
+        ('annual_faculty_report', 'Annual Faculty Report'),
+        ('research_grant_application', 'Research Grant Application'),
+        ('conference_travel_request', 'Conference Travel Request'),
+        ('publications_update', 'Publications Update'),
+        ('curriculum_development', 'Curriculum Development'),
+    ]
+    
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='submissions')
+    submission_type = models.CharField(max_length=50, choices=SUBMISSION_TYPE_CHOICES)
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    content = models.JSONField(default=dict, help_text="Stores the actual submission data")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    # Review tracking
+    reviewed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True, 
+        related_name='reviewed_submissions'
+    )
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+    review_comments = models.TextField(blank=True, null=True)
+    
+    # Department/School for filtering
+    department = models.CharField(max_length=100, blank=True, null=True)
+    school = models.CharField(max_length=100, blank=True, null=True)
+    
+    class Meta:
+        ordering = ['-submitted_at']
+        indexes = [
+            models.Index(fields=['status', 'submission_type']),
+            models.Index(fields=['user', 'status']),
+            models.Index(fields=['department', 'status']),
+        ]
+    
+    def __str__(self):
+        return f"{self.title} - {self.user.username} ({self.get_status_display()})"
+    
+    def can_be_reviewed_by(self, user):
+        """Check if a user can review this submission"""
+        if not user.can_review_submissions():
+            return False
+        
+        # Dean can review all submissions
+        if user.is_dean():
+            return True
+            
+        # Cluster head can review submissions from their department
+        if user.is_cluster_head():
+            return self.department == user.department
+            
+        return False
+
+
+class SubmissionReview(models.Model):
+    """
+    Model to track detailed review history and comments
+    """
+    ACTION_CHOICES = [
+        ('submitted', 'Submitted'),
+        ('reviewed', 'Reviewed'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+        ('revision_requested', 'Revision Requested'),
+        ('resubmitted', 'Resubmitted'),
+    ]
+    
+    submission = models.ForeignKey(FacultySubmission, on_delete=models.CASCADE, related_name='review_history')
+    reviewer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    action = models.CharField(max_length=20, choices=ACTION_CHOICES)
+    comments = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.submission.title} - {self.get_action_display()} by {self.reviewer.username}"
+
+
+class ReviewerAssignment(models.Model):
+    """
+    Model to assign specific reviewers to submissions
+    """
+    submission = models.ForeignKey(FacultySubmission, on_delete=models.CASCADE)
+    reviewer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    assigned_at = models.DateTimeField(auto_now_add=True)
+    assigned_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE, 
+        related_name='assigned_reviews'
+    )
+    is_active = models.BooleanField(default=True)
+    
+    class Meta:
+        unique_together = ['submission', 'reviewer']
+    
+    def __str__(self):
+        return f"{self.submission.title} assigned to {self.reviewer.username}"

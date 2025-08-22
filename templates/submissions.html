@@ -1,330 +1,957 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Your Submissions</title>
-    <link rel="stylesheet" href="{% static 'css/submissions.css' %}" />
-    <h1>All Research Submissions</h1>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Submissions - IILM University</title>
+    <!-- Google Font - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS Variables for consistent theming */
+        :root {
+            --primary-color: #041e42;
+            --secondary-color: #800000;
+            --accent-color: #1d4ed8;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --light-color: #f9fafb;
+            --dark-color: #1f2937;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            
+            --border-radius: 12px;
+            --border-radius-lg: 16px;
+            --border-radius-xl: 20px;
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            
+            --transition: all 0.3s ease;
+            --transition-slow: all 0.5s ease;
+            --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            
+            --sidebar-width: 280px;
+            --sidebar-width-collapsed: 80px;
+            --header-height: 80px;
+        }
 
+        /* Global Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<!-- Journal Publications -->
-<h2>Journal Publications</h2>
-{% if journal_pubs %}
-<table border="1">
-    <tr>
-        <th>Title</th>
-        <th>Author Position</th>
-        <th>Corresponding Author</th>
-        <th>Journal Name</th>
-        <th>Year</th>
-    </tr>
-    {% for pub in journal_pubs %}
-    <tr>
-        <td>{{ pub.title_of_paper }}</td>
-        <td>{{ pub.get_author_position_display }}</td>
-        <td>{{ pub.corresponding_author }}</td>
-        <td>{{ pub.journal_name }}</td>
-        <td>{{ pub.year_of_publication }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>No journal publications found.</p>
-{% endif %}
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-color);
+            color: var(--gray-800);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
 
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
 
-<!-- Conference Publications -->
-<h2>Conference Publications</h2>
-{% if conference_pubs %}
-<table border="1">
-    <tr>
-        <th>Title</th>
-        <th>Author Position</th>
-        <th>Conference Name</th>
-        <th>Date</th>
-    </tr>
-    {% for conf in conference_pubs %}
-    <tr>
-        <td>{{ conf.title_of_paper }}</td>
-        <td>{{ conf.get_author_position_display }}</td>
-        <td>{{ conf.conference_name }}</td>
-        <td>{{ conf.date_of_conference }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>No conference publications found.</p>
-{% endif %}
+        /* Dashboard Layout */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
 
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, var(--primary-color) 0%, #00172D 100%);
+            color: white;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+            transition: var(--transition);
+            box-shadow: var(--shadow-lg);
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        }
 
-<!-- Research Projects -->
-<h2>Research Projects</h2>
-{% if research_projects %}
-<table border="1">
-    <tr>
-        <th>Project Title</th>
-        <th>Funding Agency</th>
-        <th>Principal Investigator</th>
-        <th>Amount</th>
-        <th>Status</th>
-    </tr>
-    {% for rp in research_projects %}
-    <tr>
-        <td>{{ rp.project_title }}</td>
-        <td>{{ rp.funding_agency }}</td>
-        <td>{{ rp.get_principal_investigator_display }}</td>
-        <td>{{ rp.amount_sanctioned }}</td>
-        <td>{{ rp.get_status_display }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>No research projects found.</p>
-{% endif %}
+        .sidebar::-webkit-scrollbar {
+            width: 5px;
+        }
 
+        .sidebar::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
 
-<!-- Patents -->
-<h2>Patents</h2>
-{% if patents %}
-<table border="1">
-    <tr>
-        <th>Title</th>
-        <th>Inventors</th>
-        <th>Status</th>
-        <th>Patent Number</th>
-    </tr>
-    {% for pt in patents %}
-    <tr>
-        <td>{{ pt.title_of_patent }}</td>
-        <td>{{ pt.investors }}</td>
-        <td>{{ pt.get_status_display }}</td>
-        <td>{{ pt.patent_number }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>No patents found.</p>
-{% endif %}
+        .sidebar-logo {
+            max-width: 160px;
+            height: auto;
+            display: block;
+            margin: 0 auto 2rem;
+            transition: var(--transition);
+        }
 
+        .sidebar h2 {
+            margin-bottom: 2rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: white;
+            text-align: center;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
 
-<!-- Books -->
-<h2>Books</h2>
-{% if books %}
-<table border="1">
-    <tr>
-        <th>Title</th>
-        <th>Type</th>
-        <th>Publisher</th>
-        <th>Year</th>
-    </tr>
-    {% for book in books %}
-    <tr>
-        <td>{{ book.title_of_book }}</td>
-        <td>{{ book.get_type_display }}</td>
-        <td>{{ book.publisher }}</td>
-        <td>{{ book.publication_year }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>No books found.</p>
-{% endif %}
+        .sidebar h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 3px;
+            background: var(--secondary-color);
+            border-radius: 3px;
+        }
 
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 2rem;
+        }
 
-<!-- Book Chapters -->
-<h2>Book Chapters</h2>
-{% if book_chapters %}
-<table border="1">
-    <tr>
-        <th>Chapter Title</th>
-        <th>Book Title</th>
-        <th>Publisher</th>
-        <th>Year</th>
-    </tr>
-    {% for bc in book_chapters %}
-    <tr>
-        <td>{{ bc.chap_title }}</td>
-        <td>{{ bc.book_title }}</td>
-        <td>{{ bc.publisher }}</td>
-        <td>{{ bc.publication_year }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>No book chapters found.</p>
-{% endif %}
+        .sidebar ul li {
+            margin: 0.8rem 0;
+            position: relative;
+            overflow: hidden;
+        }
 
+        .sidebar ul li a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            transition: var(--transition);
+            position: relative;
+            z-index: 1;
+        }
 
-<!-- CopyRights -->
-<h2>Copyrights</h2>
-{% if copyrights %}
-<table border="1">
-    <tr>
-        <th>Title</th>
-        <th>Type</th>
-        <th>Authors</th>
-        <th>Date of Grant</th>
-    </tr>
-    {% for c in copyrights %}
-    <tr>
-        <td>{{ c.title_of_work }}</td>
-        <td>{{ c.get_type_display }}</td>
-        <td>{{ c.authors }}</td>
-        <td>{{ c.date_of_grant }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>No copyrights found.</p>
-{% endif %}
+        .sidebar ul li a i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
 
+        .sidebar ul li a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: var(--transition-slow);
+        }
 
-<!-- PhD Guidance -->
-<h2>PhD Guidance</h2>
-{% if phd_guidance %}
-<table border="1">
-    <tr>
-        <th>Scholar Name</th>
-        <th>Thesis Title</th>
-        <th>Role</th>
-        <th>Status</th>
-    </tr>
-    {% for phd in phd_guidance %}
-    <tr>
-        <td>{{ phd.name_of_scholar }}</td>
-        <td>{{ phd.thesis_title }}</td>
-        <td>{{ phd.get_role_display }}</td>
-        <td>{{ phd.get_status_display }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>No PhD guidance entries found.</p>
-{% endif %}
+        .sidebar ul li a:hover::before {
+            left: 100%;
+        }
 
+        .sidebar ul li a:hover {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding-left: 1.5rem;
+            transform: translateX(5px);
+        }
 
-<!-- Consultancy Projects -->
-<h2>Consultancy Projects</h2>
-{% if consultancy_projects %}
-<table border="1">
-    <tr>
-        <th>Project Title</th>
-        <th>Industry Partner</th>
-        <th>Duration</th>
-        <th>Amount Received</th>
-    </tr>
-    {% for cp in consultancy_projects %}
-    <tr>
-        <td>{{ cp.project_title }}</td>
-        <td>{{ cp.industry_partner }}</td>
-        <td>{{ cp.duration }}</td>
-        <td>{{ cp.amount_received }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>No consultancy projects found.</p>
-{% endif %}
+        .sidebar ul li a.active {
+            color: white;
+            background: linear-gradient(90deg, rgba(128, 0, 0, 0.3) 0%, transparent 100%);
+            box-shadow: inset 3px 0 0 var(--secondary-color);
+        }
 
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            padding: 2rem 3rem;
+            background-color: var(--light-color);
+            margin-left: var(--sidebar-width);
+            transition: var(--transition);
+            min-height: 100vh;
+        }
 
-<!-- Editorial Roles -->
-<h2>Editorial Roles</h2>
-{% if editorial_roles %}
-<table border="1">
-    <tr>
-        <th>Journal Name</th>
-        <th>Publisher</th>
-        <th>Role</th>
-        <th>From</th>
-        <th>To</th>
-    </tr>
-    {% for ed in editorial_roles %}
-    <tr>
-        <td>{{ ed.journal_name }}</td>
-        <td>{{ ed.publisher }}</td>
-        <td>{{ ed.get_editor_role_display }}</td>
-        <td>{{ ed.start_date }}</td>
-        <td>{{ ed.end_date }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>No editorial roles found.</p>
-{% endif %}
+        /* Header Styles */
+        header {
+            margin-bottom: 2rem;
+            position: relative;
+        }
 
+        header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
 
-<!-- Reviewer Roles -->
-<h2>Reviewer Roles</h2>
-{% if reviewer_roles %}
-<table border="1">
-    <tr>
-        <th>Journal/Conference</th>
-        <th>Publisher</th>
-        <th>Frequency</th>
-        <th>Indexing</th>
-    </tr>
-    {% for rr in reviewer_roles %}
-    <tr>
-        <td>{{ rr.journal_name }}</td>
-        <td>{{ rr.publisher }}</td>
-        <td>{{ rr.get_freq_of_review_display }}</td>
-        <td>{{ rr.get_indexing_display }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>No reviewer roles found.</p>
-{% endif %}
+        header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 4px;
+            background: var(--secondary-color);
+            border-radius: 2px;
+        }
 
+        header p {
+            color: var(--gray-600);
+            font-size: 1.1rem;
+        }
 
-<!-- Awards -->
-<h2>Awards</h2>
-{% if awards %}
-<table border="1">
-    <tr>
-        <th>Title</th>
-        <th>Awarding Body</th>
-        <th>Level</th>
-        <th>Date</th>
-    </tr>
-    {% for award in awards %}
-    <tr>
-        <td>{{ award.title_of_award }}</td>
-        <td>{{ award.awarding_body }}</td>
-        <td>{{ award.get_level_display }}</td>
-        <td>{{ award.date_of_award }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>No awards found.</p>
-{% endif %}
+        /* Submissions Section Styles */
+        .submission-section {
+            margin-bottom: 3rem;
+        }
 
+        .submission-section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin: 2.5rem 0 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--gray-200);
+            position: relative;
+        }
 
-<!-- Industry Collaborations -->
-<h2>Industry Collaborations</h2>
-{% if industry_collaborations %}
-<table border="1">
-    <tr>
-        <th>Industry</th>
-        <th>Nature of Collaboration</th>
-        <th>Start</th>
-        <th>End</th>
-        <th>Outcome</th>
-    </tr>
-    {% for ind in industry_collaborations %}
-    <tr>
-        <td>{{ ind.industry_name }}</td>
-        <td>{{ ind.nature_of_collaborations }}</td>
-        <td>{{ ind.start_date }}</td>
-        <td>{{ ind.end_date }}</td>
-        <td>{{ ind.get_outcomes_display }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>No industry collaborations found.</p>
-{% endif %}
-  </body>
+        .submission-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--secondary-color);
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+            background: white;
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        table:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        th, td {
+            padding: 1rem 1.2rem;
+            text-align: left;
+            border: none;
+        }
+
+        th {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #00172D 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tr:nth-child(even) {
+            background-color: var(--gray-100);
+        }
+
+        tr {
+            transition: var(--transition);
+        }
+
+        tr:hover {
+            background-color: rgba(29, 78, 216, 0.05);
+        }
+
+        td {
+            font-size: 0.95rem;
+            color: var(--gray-700);
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        /* No data message styling */
+        .no-data {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+            color: var(--gray-600);
+            font-style: italic;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-color);
+            color: white;
+            padding: 1.5rem 0;
+            text-align: center;
+            margin-left: var(--sidebar-width);
+            transition: var(--transition);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Menu Toggle Button */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1000;
+            background: var(--primary-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-content {
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            :root {
+                --sidebar-width: 80px;
+            }
+            
+            .sidebar {
+                width: var(--sidebar-width);
+                padding: 1rem 0.5rem;
+            }
+            
+            .sidebar-logo {
+                max-width: 50px;
+            }
+            
+            .sidebar h2 {
+                font-size: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .sidebar h2::after {
+                display: none;
+            }
+            
+            .sidebar ul li a span {
+                display: none;
+            }
+            
+            .sidebar ul li a i {
+                margin-right: 0;
+                font-size: 1.2rem;
+            }
+            
+            .main-content, footer {
+                margin-left: var(--sidebar-width);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1.5rem;
+            }
+            
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            th, td {
+                padding: 0.8rem 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            :root {
+                --sidebar-width: 0;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content, footer {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: flex;
+            }
+            
+            th {
+                display: none;
+            }
+            
+            td {
+                display: block;
+                padding: 0.8rem;
+                position: relative;
+                padding-left: 50%;
+            }
+            
+            td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0.8rem;
+                width: 45%;
+                padding-right: 0.8rem;
+                font-weight: 600;
+                color: var(--primary-color);
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --light-color: #111827;
+                --gray-100: #1f2937;
+                --gray-200: #374151;
+                --gray-300: #4b5563;
+                --gray-400: #6b7280;
+                --gray-500: #9ca3af;
+                --gray-600: #d1d5db;
+                --gray-700: #e5e7eb;
+                --gray-800: #f3f4f6;
+                --gray-900: #f9fafb;
+            }
+            
+            table {
+                background: var(--gray-100);
+                color: var(--gray-800);
+            }
+            
+            tr:nth-child(even) {
+                background-color: var(--gray-200);
+            }
+            
+            .no-data {
+                background: var(--gray-100);
+                color: var(--gray-600);
+            }
+        }
+
+        /* Focus styles for accessibility */
+        a:focus, button:focus {
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+
+        /* Custom scrollbar for webkit browsers */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--gray-100);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray-400);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-500);
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-toggle">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-logo">
+                <img
+                    src="{% static 'images/iilm.png' %}"
+                    alt="IILM Logo"
+                    style="width: 120px; height: auto"
+                />
+            </div>
+
+            <h2>Welcome, {{ user.username }}</h2>
+            <ul>
+                <li><a href="{% url 'dashboard' %}"><i class="fas fa-home"></i> <span>Home</span></a></li>
+                <li><a href="{% url 'view_profile' %}"><i class="fas fa-user"></i> <span>Profile</span></a></li>
+                <li><a href="{% url 'form_view' %}"><i class="fas fa-file-alt"></i> <span>Forms</span></a></li>
+                <li><a href="{% url 'submission_list' %}" class="active"><i class="fas fa-list"></i> <span>All Submissions</span></a></li>
+                <li><a href="#"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+                <li><a href="#"><i class="fas fa-chart-bar"></i> <span>Reports</span></a></li>
+                <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+            </ul>
+        </nav>
+
+        <!-- Main content -->
+        <div class="main-content">
+            <header>
+                <h1>Your Submissions</h1>
+                <p>View all your research submissions and publications</p>
+            </header>
+
+            <!-- Journal Publications -->
+            <div class="submission-section">
+                <h2>Journal Publications</h2>
+                {% if journal_pubs %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author Position</th>
+                            <th>Corresponding Author</th>
+                            <th>Journal Name</th>
+                            <th>Year</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pub in journal_pubs %}
+                        <tr>
+                            <td data-label="Title">{{ pub.title_of_paper }}</td>
+                            <td data-label="Author Position">{{ pub.get_author_position_display }}</td>
+                            <td data-label="Corresponding Author">{{ pub.corresponding_author }}</td>
+                            <td data-label="Journal Name">{{ pub.journal_name }}</td>
+                            <td data-label="Year">{{ pub.year_of_publication }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="no-data">No journal publications found.</p>
+                {% endif %}
+            </div>
+
+            <!-- Conference Publications -->
+            <div class="submission-section">
+                <h2>Conference Publications</h2>
+                {% if conference_pubs %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author Position</th>
+                            <th>Conference Name</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for conf in conference_pubs %}
+                        <tr>
+                            <td data-label="Title">{{ conf.title_of_paper }}</td>
+                            <td data-label="Author Position">{{ conf.get_author_position_display }}</td>
+                            <td data-label="Conference Name">{{ conf.conference_name }}</td>
+                            <td data-label="Date">{{ conf.date_of_conference }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="no-data">No conference publications found.</p>
+                {% endif %}
+            </div>
+
+            <!-- Research Projects -->
+            <div class="submission-section">
+                <h2>Research Projects</h2>
+                {% if research_projects %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Project Title</th>
+                            <th>Funding Agency</th>
+                            <th>Principal Investigator</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rp in research_projects %}
+                        <tr>
+                            <td data-label="Project Title">{{ rp.project_title }}</td>
+                            <td data-label="Funding Agency">{{ rp.funding_agency }}</td>
+                            <td data-label="Principal Investigator">{{ rp.get_principal_investigator_display }}</td>
+                            <td data-label="Amount">{{ rp.amount_sanctioned }}</td>
+                            <td data-label="Status">{{ rp.get_status_display }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="no-data">No research projects found.</p>
+                {% endif %}
+            </div>
+
+            <!-- Patents -->
+            <div class="submission-section">
+                <h2>Patents</h2>
+                {% if patents %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Inventors</th>
+                            <th>Status</th>
+                            <th>Patent Number</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pt in patents %}
+                        <tr>
+                            <td data-label="Title">{{ pt.title_of_patent }}</td>
+                            <td data-label="Inventors">{{ pt.investors }}</td>
+                            <td data-label="Status">{{ pt.get_status_display }}</td>
+                            <td data-label="Patent Number">{{ pt.patent_number }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="no-data">No patents found.</p>
+                {% endif %}
+            </div>
+
+            <!-- Books -->
+            <div class="submission-section">
+                <h2>Books</h2>
+                {% if books %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Type</th>
+                            <th>Publisher</th>
+                            <th>Year</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for book in books %}
+                        <tr>
+                            <td data-label="Title">{{ book.title_of_book }}</td>
+                            <td data-label="Type">{{ book.get_type_display }}</td>
+                            <td data-label="Publisher">{{ book.publisher }}</td>
+                            <td data-label="Year">{{ book.publication_year }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="no-data">No books found.</p>
+                {% endif %}
+            </div>
+
+            <!-- Book Chapters -->
+            <div class="submission-section">
+                <h2>Book Chapters</h2>
+                {% if book_chapters %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Chapter Title</th>
+                            <th>Book Title</th>
+                            <th>Publisher</th>
+                            <th>Year</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for bc in book_chapters %}
+                        <tr>
+                            <td data-label="Chapter Title">{{ bc.chap_title }}</td>
+                            <td data-label="Book Title">{{ bc.book_title }}</td>
+                            <td data-label="Publisher">{{ bc.publisher }}</td>
+                            <td data-label="Year">{{ bc.publication_year }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="no-data">No book chapters found.</p>
+                {% endif %}
+            </div>
+
+            <!-- Copyrights -->
+            <div class="submission-section">
+                <h2>Copyrights</h2>
+                {% if copyrights %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Type</th>
+                            <th>Authors</th>
+                            <th>Date of Grant</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in copyrights %}
+                        <tr>
+                            <td data-label="Title">{{ c.title_of_work }}</td>
+                            <td data-label="Type">{{ c.get_type_display }}</td>
+                            <td data-label="Authors">{{ c.authors }}</td>
+                            <td data-label="Date of Grant">{{ c.date_of_grant }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="no-data">No copyrights found.</p>
+                {% endif %}
+            </div>
+
+            <!-- PhD Guidance -->
+            <div class="submission-section">
+                <h2>PhD Guidance</h2>
+                {% if phd_guidance %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Scholar Name</th>
+                            <th>Thesis Title</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for phd in phd_guidance %}
+                        <tr>
+                            <td data-label="Scholar Name">{{ phd.name_of_scholar }}</td>
+                            <td data-label="Thesis Title">{{ phd.thesis_title }}</td>
+                            <td data-label="Role">{{ phd.get_role_display }}</td>
+                            <td data-label="Status">{{ phd.get_status_display }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="no-data">No PhD guidance entries found.</p>
+                {% endif %}
+            </div>
+
+            <!-- Consultancy Projects -->
+            <div class="submission-section">
+                <h2>Consultancy Projects</h2>
+                {% if consultancy_projects %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Project Title</th>
+                            <th>Industry Partner</th>
+                            <th>Duration</th>
+                            <th>Amount Received</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cp in consultancy_projects %}
+                        <tr>
+                            <td data-label="Project Title">{{ cp.project_title }}</td>
+                            <td data-label="Industry Partner">{{ cp.industry_partner }}</td>
+                            <td data-label="Duration">{{ cp.duration }}</td>
+                            <td data-label="Amount Received">{{ cp.amount_received }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="no-data">No consultancy projects found.</p>
+                {% endif %}
+            </div>
+
+            <!-- Editorial Roles -->
+            <div class="submission-section">
+                <h2>Editorial Roles</h2>
+                {% if editorial_roles %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Journal Name</th>
+                            <th>Publisher</th>
+                            <th>Role</th>
+                            <th>From</th>
+                            <th>To</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ed in editorial_roles %}
+                        <tr>
+                            <td data-label="Journal Name">{{ ed.journal_name }}</td>
+                            <td data-label="Publisher">{{ ed.publisher }}</td>
+                            <td data-label="Role">{{ ed.get_editor_role_display }}</td>
+                            <td data-label="From">{{ ed.start_date }}</td>
+                            <td data-label="To">{{ ed.end_date }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="no-data">No editorial roles found.</p>
+                {% endif %}
+            </div>
+
+            <!-- Reviewer Roles -->
+            <div class="submission-section">
+                <h2>Reviewer Roles</h2>
+                {% if reviewer_roles %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Journal/Conference</th>
+                            <th>Publisher</th>
+                            <th>Frequency</th>
+                            <th>Indexing</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rr in reviewer_roles %}
+                        <tr>
+                            <td data-label="Journal/Conference">{{ rr.journal_name }}</td>
+                            <td data-label="Publisher">{{ rr.publisher }}</td>
+                            <td data-label="Frequency">{{ rr.get_freq_of_review_display }}</td>
+                            <td data-label="Indexing">{{ rr.get_indexing_display }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="no-data">No reviewer roles found.</p>
+                {% endif %}
+            </div>
+
+            <!-- Awards -->
+            <div class="submission-section">
+                <h2>Awards</h2>
+                {% if awards %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Awarding Body</th>
+                            <th>Level</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for award in awards %}
+                        <tr>
+                            <td data-label="Title">{{ award.title_of_award }}</td>
+                            <td data-label="Awarding Body">{{ award.awarding_body }}</td>
+                            <td data-label="Level">{{ award.get_level_display }}</td>
+                            <td data-label="Date">{{ award.date_of_award }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="no-data">No awards found.</p>
+                {% endif %}
+            </div>
+
+            <!-- Industry Collaborations -->
+            <div class="submission-section">
+                <h2>Industry Collaborations</h2>
+                {% if industry_collaborations %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Industry</th>
+                            <th>Nature of Collaboration</th>
+                            <th>Start</th>
+                            <th>End</th>
+                            <th>Outcome</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ind in industry_collaborations %}
+                        <tr>
+                            <td data-label="Industry">{{ ind.industry_name }}</td>
+                            <td data-label="Nature of Collaboration">{{ ind.nature_of_collaborations }}</td>
+                            <td data-label="Start">{{ ind.start_date }}</td>
+                            <td data-label="End">{{ ind.end_date }}</td>
+                            <td data-label="Outcome">{{ ind.get_outcomes_display }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="no-data">No industry collaborations found.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <p>&copy; 2025 IILM University. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle sidebar on mobile
+        document.querySelector('.menu-toggle').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('active');
+        });
+    </script>
+</body>
 </html>

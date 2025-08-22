@@ -32,6 +32,13 @@ urlpatterns = [
     path("conference-travel-request/", views.conference_travel_request_view, name="conference_travel_request"),
     path("publications-update/", views.publications_update_view, name="publications_update"),
     path("curriculum-development/", views.curriculum_development_view, name="curriculum_development"),
+    path("new-submission/", views.new_submission_view, name="new_submission"),
+    path("pending-tasks/", views.pending_tasks_view, name="pending_tasks"),
+    
+    # Review System URLs
+    path("review-dashboard/", views.review_dashboard, name="review_dashboard"),
+    path("submission-review/<int:submission_id>/", views.submission_detail_review, name="submission_detail_review"),
+    path("my-submissions/", views.my_submissions, name="my_submissions"),
 
     # Debug route to test static files
     #path('test-static/', views.test_static_view, name='test_static'),

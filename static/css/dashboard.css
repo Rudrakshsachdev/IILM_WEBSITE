@@ -16,7 +16,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
@@ -54,7 +54,7 @@ body {
 }
 
 .sidebar ul li a {
-  color: #81202C;
+  color: #81202c;
   text-decoration: none;
   font-size: 1rem;
   transition: 0.3s;
@@ -113,6 +113,7 @@ header h1 {
 }
 
 /* Welcome Message */
+/*
 .welcome-msg {
   background-color: var(--highlight-bg);
   padding: 1.5rem;
@@ -129,6 +130,156 @@ header h1 {
 .welcome-msg p {
   font-size: 1rem;
   color: #475569;
+} */
+
+/* Welcome Cards Section */
+.welcome-cards {
+  margin-bottom: 2rem;
+}
+
+.welcome-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  color: white;
+}
+
+.welcome-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.welcome-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.welcome-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  font-size: 2rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.welcome-info h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: white;
+}
+
+.welcome-info .designation {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+}
+
+.welcome-info .department {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0.25rem 0 0 0;
+}
+
+/* Action Cards */
+.action-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.action-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 1px solid #f0f0f0;
+}
+
+.action-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.action-card.primary {
+  border-left: 4px solid #3b82f6;
+}
+
+.action-card.secondary {
+  border-left: 4px solid #10b981;
+}
+
+.action-card.tertiary {
+  border-left: 4px solid #f59e0b;
+}
+
+.action-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.action-card.primary .action-icon {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+.action-card.secondary .action-icon {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+.action-card.tertiary .action-icon {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.action-content h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 0.5rem 0;
+}
+
+.action-content p {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin: 0 0 1rem 0;
+  line-height: 1.4;
+}
+
+.action-link {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.action-link:hover {
+  color: #2563eb;
 }
 
 /* Personalization Section */
@@ -234,5 +385,28 @@ header h1 {
   .cards {
     flex-direction: column;
   }
-}
 
+  /* Welcome Cards Responsive */
+  .welcome-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .welcome-info h2 {
+    font-size: 1.5rem;
+  }
+
+  .action-cards {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .action-card {
+    padding: 1.25rem;
+  }
+
+  .welcome-card {
+    padding: 1.5rem;
+  }
+}
