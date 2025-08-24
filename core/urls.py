@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('signup/', views.signup_view, name='signup'),
@@ -39,6 +40,12 @@ urlpatterns = [
     path("review-dashboard/", views.review_dashboard, name="review_dashboard"),
     path("submission-review/<int:submission_id>/", views.submission_detail_review, name="submission_detail_review"),
     path("my-submissions/", views.my_submissions, name="my_submissions"),
+    path("faculty-forms/", views.FacultyForms, name="faculty_forms"),
+
+    path('password-reset/', auth_views.PasswordResetView.as_view(template_name='password_reset.html'), name='password_reset'),
+    path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='password_reset_done.html'), name='password_reset_done'),
+    path('password-reset-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='password_reset_confirm.html'), name='password_reset_confirm'),
+    path('password-reset-complete/', auth_views.PasswordResetCompleteView.as_view(template_name='password_reset_complete.html'), name='password_reset_complete'),
 
     # Debug route to test static files
     #path('test-static/', views.test_static_view, name='test_static'),

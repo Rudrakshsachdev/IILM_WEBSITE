@@ -14,6 +14,13 @@ from .models import (
 )
 
 from django.http import JsonResponse
+# Review System Views
+from django.contrib.auth.decorators import user_passes_test
+from django.core.paginator import Paginator
+from .forms import SubmissionReviewForm, SubmissionFilterForm
+from .models import FacultySubmission, SubmissionReview
+
+
 
 otp_storage = {} # Temporary storage for OTPs
 
@@ -288,6 +295,15 @@ def conference_publication_view(request):
             conference_pub.user = request.user  # 👈 Associate user
             conference_pub.save()  # Save the form data
 
+            # Create submission record for review
+            create_submission_record(
+                user=request.user,
+                submission_type='conference_publication',
+                title=f"Conference Publication: {conference_pub.title_of_paper}",
+                content=form.cleaned_data,
+                description=f"Conference: {conference_pub.conference_name}"
+            )
+
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
             progress.conference_publication_progress = True
             progress.save()  # Save the progress
@@ -326,6 +342,15 @@ def research_projects_view(request):
             research_project = form.save(commit=False)
             research_project.user = request.user  # Associate user
             research_project.save()  # Save the form data
+
+            # Create submission record for review
+            create_submission_record(
+                user=request.user,
+                submission_type='research_project',
+                title=f"Research Project: {research_project.title_of_project}",
+                content=form.cleaned_data,
+                description=f"Duration: {research_project.start_date} to {research_project.end_date}"
+            )
 
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
             progress.research_projects_progress = True
@@ -869,8 +894,6 @@ def curriculum_development_view(request):
     return render(request, 'curriculum_development.html', {'form': form})
 
 def submission_list_view(request):
-
-
     """
     Handle submission list view for authenticated users.
     - Redirects to login if the user is not authenticated.
@@ -880,24 +903,29 @@ def submission_list_view(request):
     Returns:
         HttpResponse: Rendered template or redirect response.
     """
-
-    user = request.user # Ensure user is authenticated
-    journals = JournalPublication.objects.all()
-    conferences = ConferencePublication.objects.all()
-    research_projects = ResearchProjects.objects.all()
-    patents = Patents.objects.all()
-    copyrights = CopyRights.objects.all()
-    phd_guidance = PhdGuidance.objects.all()
-    book_chapters = BookChapter.objects.all()
-    books = Book.objects.all()
-    consultancy_projects = ConsultancyProjects.objects.all()
-    editorial_roles = EditorialRoles.objects.all()
-    reviewer_roles = ReviewerRoles.objects.all()
-    awards = Awards.objects.all()
-    industry_collaborations = IndustryCollaboration.objects.all()
+    user = request.user
+    
+    # Ensure user is authenticated
+    if not user.is_authenticated:
+        return redirect('login')
+    
+    # Filter all submissions by the current user
+    journal_pubs = JournalPublication.objects.filter(user=user)
+    conference_pubs = ConferencePublication.objects.filter(user=user)
+    research_projects = ResearchProjects.objects.filter(user=user)
+    patents = Patents.objects.filter(user=user)
+    copyrights = CopyRights.objects.filter(user=user)
+    phd_guidance = PhdGuidance.objects.filter(user=user)
+    book_chapters = BookChapter.objects.filter(user=user)
+    books = Book.objects.filter(user=user)
+    consultancy_projects = ConsultancyProjects.objects.filter(user=user)
+    editorial_roles = EditorialRoles.objects.filter(user=user)
+    reviewer_roles = ReviewerRoles.objects.filter(user=user)
+    awards = Awards.objects.filter(user=user)
+    industry_collaborations = IndustryCollaboration.objects.filter(user=user)
     return render(request, 'submissions.html', {
-        'journals': journals,
-        'conferences': conferences,
+        'journal_pubs': journal_pubs,
+        'conference_pubs': conference_pubs,
         'research_projects': research_projects,
         'patents': patents,
         'copyrights': copyrights,
@@ -955,12 +983,6 @@ def new_submission_view(request):
 def pending_tasks_view(request):
     return render(request, 'pending_tasks.html')
 
-
-# Review System Views
-from django.contrib.auth.decorators import user_passes_test
-from django.core.paginator import Paginator
-from .forms import SubmissionReviewForm, SubmissionFilterForm
-from .models import FacultySubmission, SubmissionReview
 
 
 def is_reviewer(user):
@@ -1115,3 +1137,25 @@ def create_submission_record(user, submission_type, title, content, description=
         school=user.school,
         status='pending'
     )
+
+def FacultyForms(request):
+
+    user = request.user
+    if not user.is_authenticated:
+        return redirect('login')
+    
+    faculty_reports = AnnualFacultyReport.objects.filter(user=user)
+    research_grant = ResearchGrantApplication.objects.filter(user=user)
+    conference_travel = ConferenceTravelRequest.objects.filter(user=user)
+    publication = PublicationsUpdate.objects.filter(user=user)
+    curriculum = CurriculumDevelopment.objects.filter(user=user)
+
+    context = {
+        'faculty_reports': faculty_reports,
+        'research_grant': research_grant,
+        'conference_travel': conference_travel,
+        'publication': publication,
+        'curriculum': curriculum,
+    }
+
+    return render(request, 'faculty_forms.html', context)

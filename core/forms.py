@@ -649,6 +649,7 @@ class AnnualFacultyReportForm(forms.ModelForm):
     class Meta:
         model = AnnualFacultyReport
         fields = "__all__"   # includes all fields from the model
+        exclude = ['user']
         widgets = {
             'courses_taught': forms.Textarea(attrs={'rows': 3, 'placeholder': 'List of courses taught'}),
             'teaching_innovations': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Innovations implemented'}),
@@ -690,7 +691,7 @@ class ResearchGrantApplicationForm(forms.ModelForm):
     class Meta:
         model = ResearchGrantApplication
         fields = "__all__"
-        
+        exclude = ['user']
         widgets = {
             'title_of_research_proposal': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter title'}),
             'abstract': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Provide abstract'}),
@@ -724,6 +725,7 @@ class ConferenceTravelRequestForm(forms.ModelForm):
 
     class Meta:
         model = ConferenceTravelRequest
+        exclude = ['user']
         fields = [
             'title_of_conference',
             'conference_website',
@@ -787,6 +789,7 @@ class PublicationsUpdateForm(forms.ModelForm):
 
     class Meta:
         model = PublicationsUpdate
+        exclude = ['user']
         fields = [
             'title_of_publication',
             'authors',
@@ -835,14 +838,18 @@ class CurriculumDevelopmentForm(forms.ModelForm):
     class Meta:
         model = CurriculumDevelopment
         fields = '__all__'
+        exclude = ['user']
         widgets = {
-            'course_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'duration': forms.TextInput(attrs={'class': 'form-control'}),
-            'level': forms.Select(attrs={'class': 'form-control'}),
-            'status': forms.Select(attrs={'class': 'form-control'}),
-            'start_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
-            'end_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'program_title': forms.TextInput(attrs={'class': 'form-control'}),
+            'program_description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'program_goals': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'program_outcomes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'program_implementation_plan': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'program_duration': forms.TextInput(attrs={'class': 'form-control'}),
+            'program_budget': forms.NumberInput(attrs={'class': 'form-control'}),
+            'program_justification': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'program_attachments': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'dean_approval': forms.CheckboxInput(attrs={'class': 'form-check-input'})
         }
 
 
@@ -891,11 +898,13 @@ class SubmissionFilterForm(forms.Form):
         required=False,
         widget=forms.Select(attrs={'class': 'form-control'})
     )
+
     submission_type = forms.ChoiceField(
         choices=TYPE_CHOICES, 
         required=False,
         widget=forms.Select(attrs={'class': 'form-control'})
     )
+
     department = forms.CharField(
         max_length=100, 
         required=False,
@@ -912,4 +921,3 @@ class SubmissionFilterForm(forms.Form):
         required=False,
         widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'})
     )
-        

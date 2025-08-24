@@ -683,6 +683,10 @@
               ><i class="fas fa-list"></i> <span>All Submissions</span></a
             >
           </li>
+
+          <li>
+            <a href="{% url 'review_dashboard' %}"><i class="fas fa-file-alt"></i> <span>Review Dashboard</span></a>
+          </li>
           <li>
             <a href="#"><i class="fas fa-cog"></i> <span>Settings</span></a>
           </li>
@@ -833,7 +837,7 @@
                 >
               </div>
             </div>
-            <a href="{% url 'my_submissions' %}">View All Submissions</a>
+            <a href="{% url 'faculty_forms' %}">View All Submissions</a>
           </div>
         </div>
 
@@ -1350,7 +1354,10 @@
 
     <footer>
       <div class="footer-container">
-        <p>&copy; 2025 IILM University. All rights reserved.</p>
+        <p>&copy; 2025 IILM University. All rights reserved.
+          <br />
+          Developers: Rudraksh Sachdeva, Yug Prakash, Shailesh
+        </p>
       </div>
     </footer>
 

@@ -4,14 +4,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Review Dashboard - IILM Faculty Portal</title>
+    <title>My Submitted Forms - IILM Faculty Portal</title>
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <style>
-      /* CSS Variables for consistent theming */
+      /* Reuse the CSS variables from the review dashboard */
       :root {
         --primary-color: #041e42;
         --secondary-color: #800000;
@@ -64,11 +64,6 @@
         line-height: 1.6;
         overflow-x: hidden;
         min-height: 100vh;
-      }
-
-      /* Smooth scrolling */
-      html {
-        scroll-behavior: smooth;
       }
 
       /* Dashboard Layout */
@@ -230,12 +225,8 @@
         border-radius: 2px;
       }
 
-      /* Review Dashboard */
-      .review-dashboard {
-        max-width: 100%;
-      }
-
-      .dashboard-header {
+      /* Page Header */
+      .page-header {
         background: linear-gradient(135deg, var(--primary-color) 0%, #00172D 100%);
         color: white;
         padding: 2rem;
@@ -244,163 +235,97 @@
         box-shadow: var(--shadow-md);
       }
 
-      .dashboard-header h1 {
+      .page-header h1 {
         font-size: 2rem;
         margin-bottom: 0.5rem;
         color: white;
       }
 
-      .dashboard-header h1::after {
+      .page-header h1::after {
         display: none;
       }
 
-      .dashboard-header p {
+      .page-header p {
         opacity: 0.9;
         margin-bottom: 0.25rem;
       }
 
-      /* Statistics Grid */
-      .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 2rem;
-      }
-
-      .stat-card {
+      /* Submission Sections */
+      .submission-section {
         background: white;
-        padding: 1.5rem;
-        border-radius: var(--border-radius);
-        box-shadow: var(--shadow);
-        text-align: center;
-        transition: var(--transition);
-        position: relative;
-        overflow: hidden;
-      }
-
-      .stat-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
-        opacity: 0;
-        transition: var(--transition);
-      }
-
-      .stat-card:hover::before {
-        opacity: 1;
-      }
-
-      .stat-card:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--shadow-lg);
-      }
-
-      .stat-number {
-        font-size: 2.25rem;
-        font-weight: 700;
-        color: var(--primary-color);
-        margin-bottom: 0.5rem;
-      }
-
-      /* Filters Section */
-      .filters-section {
-        background: white;
-        padding: 2rem;
         border-radius: var(--border-radius-lg);
         box-shadow: var(--shadow);
+        padding: 2rem;
         margin-bottom: 2rem;
+        transition: var(--transition);
       }
 
-      .filters-section h3 {
-        font-size: 1.4rem;
-        margin-bottom: 1.5rem;
+      .submission-section:hover {
+        box-shadow: var(--shadow-md);
+      }
+
+      .submission-section h2 {
+        font-size: 1.5rem;
         color: var(--primary-color);
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid var(--gray-200);
         display: flex;
         align-items: center;
         gap: 0.75rem;
       }
 
-      .filters-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1.5rem;
-        align-items: end;
+      .submission-section h2 i {
+        color: var(--secondary-color);
       }
 
-      .filters-grid div {
-        display: flex;
-        flex-direction: column;
+      .submission-list {
+        list-style: none;
+        padding: 0;
       }
 
-      .filters-grid label {
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        color: var(--gray-700);
-      }
-
-      .filters-grid select,
-      .filters-grid input {
-        padding: 0.75rem;
-        border: 1px solid var(--gray-300);
+      .submission-item {
+        padding: 1.25rem;
+        border: 1px solid var(--gray-200);
         border-radius: var(--border-radius);
-        font-size: 1rem;
+        margin-bottom: 1rem;
         transition: var(--transition);
       }
 
-      .filters-grid select:focus,
-      .filters-grid input:focus {
-        outline: none;
+      .submission-item:hover {
         border-color: var(--accent-color);
-        box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1);
+        transform: translateX(5px);
       }
 
-      /* Submissions Table */
-      .submissions-table {
-        background: white;
-        border-radius: var(--border-radius-lg);
-        box-shadow: var(--shadow);
-        overflow: hidden;
-        margin-bottom: 2rem;
+      .submission-item:last-child {
+        margin-bottom: 0;
       }
 
-      .table {
-        width: 100%;
-        border-collapse: collapse;
+      .submission-item strong {
+        color: var(--dark-color);
+        margin-right: 0.5rem;
       }
 
-      .table th {
-        background: var(--gray-100);
-        padding: 1.25rem;
-        text-align: left;
-        font-weight: 600;
-        color: var(--gray-700);
-        border-bottom: 1px solid var(--gray-300);
+      .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: var(--gray-500);
       }
 
-      .table td {
-        padding: 1.25rem;
-        border-bottom: 1px solid var(--gray-200);
-        vertical-align: top;
+      .empty-state i {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: var(--gray-300);
       }
 
-      .table tr:last-child td {
-        border-bottom: none;
-      }
-
-      .table tr:hover {
-        background-color: var(--gray-50);
-      }
-
+      /* Status Badges */
       .status-badge {
         padding: 0.4rem 0.9rem;
         border-radius: 9999px;
         font-size: 0.85rem;
         font-weight: 600;
         display: inline-block;
+        margin-top: 0.5rem;
       }
 
       .status-pending {
@@ -421,71 +346,6 @@
       .status-under_review {
         background: #dbeafe;
         color: #1e40af;
-      }
-
-      .text-muted {
-        color: var(--gray-500);
-        font-size: 0.9rem;
-      }
-
-      .text-center {
-        text-align: center;
-      }
-
-      /* Buttons */
-      .btn {
-        padding: 0.6rem 1.25rem;
-        border: none;
-        border-radius: var(--border-radius);
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.9rem;
-        font-weight: 600;
-        transition: var(--transition);
-      }
-
-      .btn-primary {
-        background: linear-gradient(135deg, var(--primary-color) 0%, #00172D 100%);
-        color: white;
-      }
-
-      .btn-primary:hover {
-        background: linear-gradient(135deg, #00172D 0%, var(--primary-color) 100%);
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
-      }
-
-      /* Pagination */
-      .pagination {
-        display: flex;
-        justify-content: center;
-        gap: 0.5rem;
-        margin-top: 2rem;
-      }
-
-      .pagination a,
-      .pagination span {
-        padding: 0.6rem 1rem;
-        border: 1px solid var(--gray-300);
-        border-radius: var(--border-radius);
-        text-decoration: none;
-        color: var(--gray-700);
-        font-weight: 500;
-        transition: var(--transition);
-      }
-
-      .pagination a:hover {
-        background: var(--gray-100);
-        border-color: var(--gray-400);
-      }
-
-      .pagination .current {
-        background: var(--primary-color);
-        color: white;
-        border-color: var(--primary-color);
       }
 
       /* Footer */
@@ -523,17 +383,28 @@
         cursor: pointer;
       }
 
-      /* Responsive Design */
-      @media (max-width: 1200px) {
-        .stats-grid {
-          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        }
-        
-        .filters-grid {
-          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        }
+      /* Back Button */
+      .back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: var(--primary-color);
+        color: white;
+        text-decoration: none;
+        border-radius: var(--border-radius);
+        font-weight: 500;
+        transition: var(--transition);
+        margin-top: 2rem;
       }
 
+      .back-button:hover {
+        background: #00172D;
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+
+      /* Responsive Design */
       @media (max-width: 992px) {
         :root {
           --sidebar-width: 80px;
@@ -569,10 +440,6 @@
         .main-content, footer {
           margin-left: var(--sidebar-width);
         }
-        
-        .stats-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
       }
 
       @media (max-width: 768px) {
@@ -580,21 +447,12 @@
           padding: 1.5rem;
         }
         
-        .stats-grid {
-          grid-template-columns: 1fr;
-        }
-        
-        .filters-grid {
-          grid-template-columns: 1fr;
-        }
-        
-        .dashboard-header h1 {
+        .page-header h1 {
           font-size: 1.8rem;
         }
         
-        .table {
-          display: block;
-          overflow-x: auto;
+        .submission-section {
+          padding: 1.5rem;
         }
       }
 
@@ -620,17 +478,8 @@
           display: block;
         }
         
-        .dashboard-header {
+        .page-header {
           padding: 1.5rem;
-        }
-        
-        .filters-section {
-          padding: 1.5rem;
-        }
-        
-        .table th,
-        .table td {
-          padding: 1rem;
         }
       }
 
@@ -649,26 +498,20 @@
           --gray-900: #f9fafb;
         }
         
-        .stat-card,
-        .filters-section,
-        .submissions-table {
+        .submission-section {
           background: var(--gray-100);
           color: var(--gray-800);
         }
         
-        .table th {
-          background: var(--gray-200);
-          border-bottom: 1px solid var(--gray-700);
-        }
-        
-        .table td {
-          border-bottom: 1px solid var(--gray-700);
-        }
-        
-        .filters-grid select,
-        .filters-grid input {
-          background: var(--gray-200);
+        .submission-item {
           border-color: var(--gray-700);
+        }
+        
+        .submission-section h2 {
+          border-bottom-color: var(--gray-700);
+        }
+        
+        .submission-item strong {
           color: var(--gray-800);
         }
       }
@@ -720,7 +563,8 @@
           <li><a href="{% url 'view_profile' %}"><i class="fas fa-user"></i> <span>Profile</span></a></li>
           <li><a href="{% url 'form_view' %}"><i class="fas fa-file-alt"></i> <span>Forms</span></a></li>
           <li><a href="{% url 'submission_list' %}"><i class="fas fa-list"></i> <span>All Submissions</span></a></li>
-          <li><a href="{% url 'review_dashboard' %}" class="active"><i class="fas fa-clipboard-check"></i> <span>Review Dashboard</span></a></li>
+          <li><a href="{% url 'review_dashboard' %}"><i class="fas fa-clipboard-check"></i> <span>Review Dashboard</span></a></li>
+          <li><a href="{% url 'my_submissions' %}" class="active"><i class="fas fa-file-export"></i> <span>My Submissions</span></a></li>
           <li><a href="#"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
           <li><a href="#"><i class="fas fa-chart-bar"></i> <span>Reports</span></a></li>
           <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
@@ -729,153 +573,158 @@
 
       <!-- Main content -->
       <div class="main-content">
-        <div class="review-dashboard">
-          <div class="dashboard-header">
-            <h1><i class="fas fa-clipboard-check"></i> Review Dashboard</h1>
-            <p>
-              Welcome, {{ user.first_name }} {{ user.last_name }} ({{ user.designation }})
-            </p>
-            <p>Manage and review faculty submissions</p>
-          </div>
-
-          <!-- Statistics -->
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-number">{{ stats.total_submissions }}</div>
-              <div>Total Submissions</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-number">{{ stats.pending_review }}</div>
-              <div>Pending Review</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-number">{{ stats.under_review }}</div>
-              <div>Under Review</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-number">{{ stats.approved }}</div>
-              <div>Approved</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-number">{{ stats.rejected }}</div>
-              <div>Rejected</div>
-            </div>
-          </div>
-
-          <!-- Filters -->
-          <div class="filters-section">
-            <h3><i class="fas fa-filter"></i> Filter Submissions</h3>
-            <form method="get" class="filters-grid">
-              <div>
-                <label>Status:</label>
-                {{ filter_form.status }}
-              </div>
-              <div>
-                <label>Type:</label>
-                {{ filter_form.submission_type }}
-              </div>
-              <div>
-                <label>Department:</label>
-                {{ filter_form.department }}
-              </div>
-              <div>
-                <label>From Date:</label>
-                {{ filter_form.date_from }}
-              </div>
-              <div>
-                <label>To Date:</label>
-                {{ filter_form.date_to }}
-              </div>
-              <div>
-                <button type="submit" class="btn btn-primary">
-                  <i class="fas fa-search"></i> Filter
-                </button>
-              </div>
-            </form>
-          </div>
-
-          <!-- Submissions Table -->
-          <div class="submissions-table">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Title</th>
-                  <th>Faculty</th>
-                  <th>Type</th>
-                  <th>Department</th>
-                  <th>Status</th>
-                  <th>Submitted</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for submission in submissions %}
-                <tr>
-                  <td>
-                    <strong>{{ submission.title|truncatechars:50 }}</strong>
-                    {% if submission.description %}
-                    <br /><small class="text-muted"
-                      >{{ submission.description|truncatechars:80 }}</small
-                    >
-                    {% endif %}
-                  </td>
-                  <td>
-                    {{ submission.user.first_name }} {{ submission.user.last_name }}
-                    <br /><small>{{ submission.user.username }}</small>
-                  </td>
-                  <td>{{ submission.get_submission_type_display }}</td>
-                  <td>{{ submission.department|default:"N/A" }}</td>
-                  <td>
-                    <span class="status-badge status-{{ submission.status }}">
-                      {{ submission.get_status_display }}
-                    </span>
-                  </td>
-                  <td>{{ submission.submitted_at|date:"M d, Y" }}</td>
-                  <td>
-                    <a
-                      href="{% url 'my_submissions' submission.id %}"
-                      class="btn btn-primary"
-                    >
-                      <i class="fas fa-eye"></i> Review
-                    </a>
-                  </td>
-                </tr>
-                {% empty %}
-                <tr>
-                  <td colspan="7" class="text-center">
-                    <i class="fas fa-inbox"></i> No submissions found
-                  </td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Pagination -->
-          {% if submissions.has_other_pages %}
-          <div class="pagination">
-            {% if submissions.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ submissions.previous_page_number }}">previous</a>
-            {% endif %}
-
-            <span class="current">
-              Page {{ submissions.number }} of {{ submissions.paginator.num_pages }}
-            </span>
-
-            {% if submissions.has_next %}
-            <a href="?page={{ submissions.next_page_number }}">next</a>
-            <a href="?page={{ submissions.paginator.num_pages }}">last &raquo;</a>
-            {% endif %}
-          </div>
-          {% endif %}
+        <div class="page-header">
+          <h1><i class="fas fa-file-alt"></i> My Submitted Forms</h1>
+          <p>View all your submitted forms and applications</p>
         </div>
+
+        <!-- Faculty Reports -->
+        <section class="submission-section">
+          <h2><i class="fas fa-chart-line"></i> Annual Faculty Reports</h2>
+          {% if faculty_reports %}
+            <ul class="submission-list">
+              {% for report in faculty_reports %}
+                <li class="submission-item">
+                  <strong>Courses Taught:</strong> {{ report.courses_taught }} <br>
+                  <strong>Major Achievements:</strong> {{ report.major_achievements }}<br>
+                  <strong>Research Contributions:</strong> {{ report.research_contributions }}<br>
+                  <strong>Service Contributions:</strong> {{ report.service_contributions }}<br>
+                  {% if report.status %}
+                  <span class="status-badge status-{{ report.status }}">
+                    {{ report.get_status_display }}
+                  </span>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <div class="empty-state">
+              <i class="fas fa-inbox"></i>
+              <p>No faculty reports submitted yet.</p>
+            </div>
+          {% endif %}
+        </section>
+
+        <!-- Research Grant -->
+        <section class="submission-section">
+          <h2><i class="fas fa-graduation-cap"></i> Research Grant Applications</h2>
+          {% if research_grant %}
+            <ul class="submission-list">
+              {% for grant in research_grant %}
+                <li class="submission-item">
+                  <strong>Project:</strong> {{ grant.title_of_research_proposal }} <br>
+                  <strong>Principal Investigator:</strong> {{ grant.principal_investigator }} <br>
+                  <strong>Co-Investigators:</strong> {{ grant.co_investigators }} <br>
+                  <strong>Funding Agency:</strong> {{ grant.funding_agency }} <br>
+                  <strong>Budget:</strong> ₹{{ grant.budget }} <br>
+                  <strong>Status:</strong>
+                  <span class="status-badge status-{{ grant.status }}">
+                    {{ grant.get_status_display }}
+                  </span>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <div class="empty-state">
+              <i class="fas fa-inbox"></i>
+              <p>No research grant applications submitted yet.</p>
+            </div>
+          {% endif %}
+        </section>
+
+        <!-- Conference Travel -->
+        <section class="submission-section">
+          <h2><i class="fas fa-plane"></i> Conference Travel Requests</h2>
+          {% if conference_travel %}
+            <ul class="submission-list">
+              {% for travel in conference_travel %}
+                <li class="submission-item">
+                  <strong>Conference:</strong> {{ travel.title_of_conference }} <br>
+                  <strong>Venue:</strong> {{ travel.conference_venue }} <br>
+                  <strong>Organizer:</strong> {{ travel.conference_organizer }}<br>
+                  <strong>Dates:</strong> {{ travel.from_date }} to {{ travel.to_date }}<br>
+                  {% if travel.status %}
+                  <span class="status-badge status-{{ travel.status }}">
+                    {{ travel.get_status_display }}
+                  </span>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <div class="empty-state">
+              <i class="fas fa-inbox"></i>
+              <p>No conference travel requests submitted yet.</p>
+            </div>
+          {% endif %}
+        </section>
+
+        <!-- Publications -->
+        <section class="submission-section">
+          <h2><i class="fas fa-book"></i> Publications</h2>
+          {% if publication %}
+            <ul class="submission-list">
+              {% for pub in publication %}
+                <li class="submission-item">
+                  <strong>Title:</strong> {{ pub.title_of_publication }} <br>
+                  <strong>Type:</strong> {{ pub.type_of_publication }} <br>
+                  <strong>Publisher:</strong> {{ pub.publisher }} <br>
+                  <strong>Year:</strong> {{ pub.year_of_publication }}<br>
+                  {% if pub.status %}
+                  <span class="status-badge status-{{ pub.status }}">
+                    {{ pub.get_status_display }}
+                  </span>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <div class="empty-state">
+              <i class="fas fa-inbox"></i>
+              <p>No publications submitted yet.</p>
+            </div>
+          {% endif %}
+        </section>
+
+        <!-- Curriculum Development -->
+        <section class="submission-section">
+          <h2><i class="fas fa-tasks"></i> Curriculum Development</h2>
+          {% if curriculum %}
+            <ul class="submission-list">
+              {% for cur in curriculum %}
+                <li class="submission-item">
+                  <strong>Program Title:</strong> {{ cur.program_title }} <br>
+                  <strong>Duration:</strong> {{ cur.program_duration }} <br>
+                  <strong>Budget:</strong> {{ cur.program_budget }} <br>
+                  <strong>Coordinating Agency:</strong> {{ cur.coordinating_agency }}<br>
+                  {% if cur.status %}
+                  <span class="status-badge status-{{ cur.status }}">
+                    {{ cur.get_status_display }}
+                  </span>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <div class="empty-state">
+              <i class="fas fa-inbox"></i>
+              <p>No curriculum development entries submitted yet.</p>
+            </div>
+          {% endif %}
+        </section>
+
+        <a href="{% url 'dashboard' %}" class="back-button">
+          <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
       </div>
     </div>
 
     <footer>
       <div class="footer-container">
-        <p>&copy; 2025 IILM University. All rights reserved.</p>
+        <p>&copy; 2025 IILM University. All rights reserved.
+          <br />
+          Developers: Rudraksh Sachdeva, Yug Prakash, Shailesh
+        </p>
       </div>
     </footer>
 
@@ -884,15 +733,6 @@
       document.querySelector('.menu-toggle').addEventListener('click', function() {
         document.querySelector('.sidebar').classList.toggle('active');
       });
-
-      // Auto-submit form when filters change
-      document
-        .querySelectorAll(".filters-section select, .filters-section input")
-        .forEach((element) => {
-          element.addEventListener("change", function () {
-            this.form.submit();
-          });
-        });
     </script>
   </body>
 </html>

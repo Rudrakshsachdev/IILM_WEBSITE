@@ -666,6 +666,8 @@ class UserFormProgress(models.Model):
     
 
 class AnnualFacultyReport(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
     courses_taught = models.TextField(blank=True, null=True, help_text="List of courses taught in the academic year")
     teaching_innovations = models.TextField(blank=True, null=True, help_text="Description of teaching innovations implemented")
     student_mentoring = models.TextField(blank=True, null=True, help_text="Description of student mentoring activities")
@@ -690,8 +692,13 @@ class AnnualFacultyReport(models.Model):
     check_box = models.BooleanField(default=False, help_text="I confirm that the information provided is accurate and complete.")
     additional_comments = models.TextField(blank=True, null=True, help_text="Any additional comments or information.")
 
+    def __str__(self):
+        return f"{self.user.username} - Annual Faculty Report"
+
 
 class ResearchGrantApplication(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
     title_of_research_proposal = models.CharField(max_length=255, blank=True, null=True, help_text="Enter the title of the research proposal")
     abstract = models.TextField(blank=True, null=True, help_text="Provide a brief abstract of the research proposal")
     objectives = models.TextField(blank=True, null=True, help_text="List the objectives of the research proposal")
@@ -712,6 +719,8 @@ class ResearchGrantApplication(models.Model):
     signature_img = models.ImageField(upload_to='research_proposals/signatures/', blank=True, null=True, help_text="Upload your signature image")
     
 class ConferenceTravelRequest(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
     title_of_conference = models.CharField(max_length=255, blank=True, null=True, help_text="Enter the title of the conference")
     conference_website = models.URLField(blank=True, null=True, help_text="Enter the conference website URL")
 
@@ -743,6 +752,7 @@ class ConferenceTravelRequest(models.Model):
     dean_approval = models.BooleanField(default=False, help_text="I confirm that I have obtained the necessary approvals for this conference attendance.")
 
 class PublicationsUpdate(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title_of_publication = models.CharField(max_length=255, blank=True, null=True, help_text="Enter the title of the publication")
     authors = models.CharField(max_length=255, blank=True, null=True, help_text="Enter the authors of the publication")
 
@@ -760,6 +770,7 @@ class PublicationsUpdate(models.Model):
     checkbox = models.BooleanField(default=False, help_text="I confirm that the information provided is accurate and complete.")
 
 class CurriculumDevelopment(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     program_title = models.CharField(max_length=255, blank=True, null=True, help_text="Enter the title of the program")
 
     program_description = models.TextField(blank=True, null=True, help_text="Enter a description of the program")
