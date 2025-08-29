@@ -38,7 +38,7 @@ urlpatterns = [
     
     # Review System URLs
     path("review-dashboard/", views.review_dashboard, name="review_dashboard"),
-    path("submission-review/<int:submission_id>/", views.submission_detail_review, name="submission_detail_review"),
+    # path("submission-review/<int:submission_id>/", views.submission_detail_review, name="submission_detail_review"),
     path("my-submissions/", views.my_submissions, name="my_submissions"),
     path("faculty-forms/", views.FacultyForms, name="faculty_forms"),
 
@@ -46,6 +46,9 @@ urlpatterns = [
     path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='password_reset_done.html'), name='password_reset_done'),
     path('password-reset-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='password_reset_confirm.html'), name='password_reset_confirm'),
     path('password-reset-complete/', auth_views.PasswordResetCompleteView.as_view(template_name='password_reset_complete.html'), name='password_reset_complete'),
+    path("submission/<int:submission_id>/review/", views.review_submission, name="review_submission"),
+    path("submission/<int:submission_id>/", views.submission_detail_review, name="submission_detail_review"),
+
 
     # Debug route to test static files
     #path('test-static/', views.test_static_view, name='test_static'),

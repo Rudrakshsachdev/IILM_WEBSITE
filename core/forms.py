@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import CustomUser, UserOTP, JournalPublication, ConferencePublication, ResearchProjects, Patents, CopyRights, PhdGuidance, BookChapter, Book, ConsultancyProjects, EditorialRoles, ReviewerRoles, Awards, IndustryCollaboration, UserFormProgress, AnnualFacultyReport, ResearchGrantApplication, ConferenceTravelRequest, PublicationsUpdate, CurriculumDevelopment, FacultySubmission, SubmissionReview
+from django.core.exceptions import ValidationError
 
 
 
@@ -27,9 +28,13 @@ class SignupForm(UserCreationForm):
             'password1': None,
             'password2': None,
         }
-
-
-
+    
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        allowed_domain = "iilm.edu"
+        if not email.endswith("@" + allowed_domain):
+            raise ValidationError(f"Only {allowed_domain} emails are allowed.")
+        return email
 
 class LoginForm(AuthenticationForm):
     

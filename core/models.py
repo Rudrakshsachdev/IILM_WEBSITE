@@ -14,10 +14,11 @@ class CustomUser(AbstractUser):
 
     # Role choices
     ROLE_CHOICES = [
-        ('faculty', 'Faculty'),
-        ('cluster_head', 'Cluster Head'),
+        ('vice chancellor', 'Vice Chancellor'),
         ('dean', 'Dean'),
-        ('admin', 'Admin'),
+        ('cluster_head', 'Cluster Head'),
+        ('faculty', 'Faculty')   
+          
     ]
 
     school = models.CharField(max_length=100, blank=True, null=True)
@@ -134,6 +135,7 @@ class JournalPublication(models.Model):
         default = 0,
         help_text = "Number of authors from IILM University"
     )
+
 
 class ConferencePublication(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

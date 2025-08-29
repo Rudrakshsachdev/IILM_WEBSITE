@@ -30,21 +30,24 @@
         --gray-700: #374151;
         --gray-800: #1f2937;
         --gray-900: #111827;
-        
+
         --border-radius: 12px;
         --border-radius-lg: 16px;
         --border-radius-xl: 20px;
-        
+
         --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
         --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        
+
         --transition: all 0.3s ease;
         --transition-slow: all 0.5s ease;
         --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        
+
         --sidebar-width: 280px;
         --sidebar-width-collapsed: 80px;
         --header-height: 80px;
@@ -58,7 +61,7 @@
       }
 
       body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         background-color: var(--light-color);
         color: var(--gray-800);
         line-height: 1.6;
@@ -81,7 +84,11 @@
       /* Sidebar Styles */
       .sidebar {
         width: var(--sidebar-width);
-        background: linear-gradient(180deg, var(--primary-color) 0%, #00172D 100%);
+        background: linear-gradient(
+          180deg,
+          var(--primary-color) 0%,
+          #00172d 100%
+        );
         color: white;
         padding: 2rem 1.5rem;
         display: flex;
@@ -124,7 +131,7 @@
       }
 
       .sidebar h2::after {
-        content: '';
+        content: "";
         position: absolute;
         bottom: 0;
         left: 50%;
@@ -167,13 +174,18 @@
       }
 
       .sidebar ul li a::before {
-        content: '';
+        content: "";
         position: absolute;
         top: 0;
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.1),
+          transparent
+        );
         transition: var(--transition-slow);
       }
 
@@ -190,7 +202,11 @@
 
       .sidebar ul li a.active {
         color: white;
-        background: linear-gradient(90deg, rgba(128, 0, 0, 0.3) 0%, transparent 100%);
+        background: linear-gradient(
+          90deg,
+          rgba(128, 0, 0, 0.3) 0%,
+          transparent 100%
+        );
         box-shadow: inset 3px 0 0 var(--secondary-color);
       }
 
@@ -220,7 +236,7 @@
       }
 
       header h1::after {
-        content: '';
+        content: "";
         position: absolute;
         bottom: -10px;
         left: 0;
@@ -236,7 +252,11 @@
       }
 
       .dashboard-header {
-        background: linear-gradient(135deg, var(--primary-color) 0%, #00172D 100%);
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          #00172d 100%
+        );
         color: white;
         padding: 2rem;
         border-radius: var(--border-radius-lg);
@@ -279,13 +299,17 @@
       }
 
       .stat-card::before {
-        content: '';
+        content: "";
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 4px;
-        background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
+        background: linear-gradient(
+          90deg,
+          var(--accent-color),
+          var(--secondary-color)
+        );
         opacity: 0;
         transition: var(--transition);
       }
@@ -448,12 +472,20 @@
       }
 
       .btn-primary {
-        background: linear-gradient(135deg, var(--primary-color) 0%, #00172D 100%);
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          #00172d 100%
+        );
         color: white;
       }
 
       .btn-primary:hover {
-        background: linear-gradient(135deg, #00172D 0%, var(--primary-color) 100%);
+        background: linear-gradient(
+          135deg,
+          #00172d 0%,
+          var(--primary-color) 100%
+        );
         transform: translateY(-2px);
         box-shadow: var(--shadow-md);
       }
@@ -528,7 +560,7 @@
         .stats-grid {
           grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         }
-        
+
         .filters-grid {
           grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         }
@@ -538,38 +570,39 @@
         :root {
           --sidebar-width: 80px;
         }
-        
+
         .sidebar {
           width: var(--sidebar-width);
           padding: 1rem 0.5rem;
         }
-        
+
         .sidebar-logo {
           max-width: 50px;
         }
-        
+
         .sidebar h2 {
           font-size: 0;
           margin-bottom: 1rem;
         }
-        
+
         .sidebar h2::after {
           display: none;
         }
-        
+
         .sidebar ul li a span {
           display: none;
         }
-        
+
         .sidebar ul li a i {
           margin-right: 0;
           font-size: 1.2rem;
         }
-        
-        .main-content, footer {
+
+        .main-content,
+        footer {
           margin-left: var(--sidebar-width);
         }
-        
+
         .stats-grid {
           grid-template-columns: repeat(2, 1fr);
         }
@@ -579,19 +612,19 @@
         .main-content {
           padding: 1.5rem;
         }
-        
+
         .stats-grid {
           grid-template-columns: 1fr;
         }
-        
+
         .filters-grid {
           grid-template-columns: 1fr;
         }
-        
+
         .dashboard-header h1 {
           font-size: 1.8rem;
         }
-        
+
         .table {
           display: block;
           overflow-x: auto;
@@ -602,32 +635,33 @@
         :root {
           --sidebar-width: 0;
         }
-        
+
         .sidebar {
           transform: translateX(-100%);
           width: 280px;
         }
-        
+
         .sidebar.active {
           transform: translateX(0);
         }
-        
-        .main-content, footer {
+
+        .main-content,
+        footer {
           margin-left: 0;
         }
-        
+
         .menu-toggle {
           display: block;
         }
-        
+
         .dashboard-header {
           padding: 1.5rem;
         }
-        
+
         .filters-section {
           padding: 1.5rem;
         }
-        
+
         .table th,
         .table td {
           padding: 1rem;
@@ -648,23 +682,23 @@
           --gray-800: #f3f4f6;
           --gray-900: #f9fafb;
         }
-        
+
         .stat-card,
         .filters-section,
         .submissions-table {
           background: var(--gray-100);
           color: var(--gray-800);
         }
-        
+
         .table th {
           background: var(--gray-200);
           border-bottom: 1px solid var(--gray-700);
         }
-        
+
         .table td {
           border-bottom: 1px solid var(--gray-700);
         }
-        
+
         .filters-grid select,
         .filters-grid input {
           background: var(--gray-200);
@@ -674,7 +708,10 @@
       }
 
       /* Focus styles for accessibility */
-      a:focus, button:focus, select:focus, input:focus {
+      a:focus,
+      button:focus,
+      select:focus,
+      input:focus {
         outline: 2px solid var(--accent-color);
         outline-offset: 2px;
       }
@@ -716,14 +753,45 @@
 
         <h2>Welcome, {{ user.username }}</h2>
         <ul>
-          <li><a href="{% url 'dashboard' %}"><i class="fas fa-home"></i> <span>Home</span></a></li>
-          <li><a href="{% url 'view_profile' %}"><i class="fas fa-user"></i> <span>Profile</span></a></li>
-          <li><a href="{% url 'form_view' %}"><i class="fas fa-file-alt"></i> <span>Forms</span></a></li>
-          <li><a href="{% url 'submission_list' %}"><i class="fas fa-list"></i> <span>All Submissions</span></a></li>
-          <li><a href="{% url 'review_dashboard' %}" class="active"><i class="fas fa-clipboard-check"></i> <span>Review Dashboard</span></a></li>
-          <li><a href="#"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
-          <li><a href="#"><i class="fas fa-chart-bar"></i> <span>Reports</span></a></li>
-          <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+          <li>
+            <a href="{% url 'dashboard' %}"
+              ><i class="fas fa-home"></i> <span>Home</span></a
+            >
+          </li>
+          <li>
+            <a href="{% url 'view_profile' %}"
+              ><i class="fas fa-user"></i> <span>Profile</span></a
+            >
+          </li>
+          <li>
+            <a href="{% url 'form_view' %}"
+              ><i class="fas fa-file-alt"></i> <span>Forms</span></a
+            >
+          </li>
+          <li>
+            <a href="{% url 'submission_list' %}"
+              ><i class="fas fa-list"></i> <span>All Submissions</span></a
+            >
+          </li>
+          <li>
+            <a href="{% url 'review_dashboard' %}" class="active"
+              ><i class="fas fa-clipboard-check"></i>
+              <span>Review Dashboard</span></a
+            >
+          </li>
+          <li>
+            <a href="#"><i class="fas fa-cog"></i> <span>Settings</span></a>
+          </li>
+          <li>
+            <a href="#"
+              ><i class="fas fa-chart-bar"></i> <span>Reports</span></a
+            >
+          </li>
+          <li>
+            <a href="{% url 'logout' %}"
+              ><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a
+            >
+          </li>
         </ul>
       </nav>
 
@@ -733,7 +801,8 @@
           <div class="dashboard-header">
             <h1><i class="fas fa-clipboard-check"></i> Review Dashboard</h1>
             <p>
-              Welcome, {{ user.first_name }} {{ user.last_name }} ({{ user.designation }})
+              Welcome, {{ user.first_name }} {{ user.last_name }} ({{
+              user.designation }})
             </p>
             <p>Manage and review faculty submissions</p>
           </div>
@@ -759,6 +828,10 @@
             <div class="stat-card">
               <div class="stat-number">{{ stats.rejected }}</div>
               <div>Rejected</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">{{ stats.needs_revision }}</div>
+              <div>Needs Revision</div>
             </div>
           </div>
 
@@ -812,7 +885,7 @@
                 {% for submission in submissions %}
                 <tr>
                   <td>
-                    <strong>{{ submission.title|truncatechars:50 }}</strong>
+                    <strong>{{ submission.user.username|truncatechars:50 }}</strong>
                     {% if submission.description %}
                     <br /><small class="text-muted"
                       >{{ submission.description|truncatechars:80 }}</small
@@ -820,7 +893,8 @@
                     {% endif %}
                   </td>
                   <td>
-                    {{ submission.user.first_name }} {{ submission.user.last_name }}
+                    {{ submission.user.first_name }} {{
+                    submission.user.last_name }}
                     <br /><small>{{ submission.user.username }}</small>
                   </td>
                   <td>{{ submission.get_submission_type_display }}</td>
@@ -833,11 +907,68 @@
                   <td>{{ submission.submitted_at|date:"M d, Y" }}</td>
                   <td>
                     <a
-                      href="{% url 'my_submissions' submission.id %}"
+                      href="{% url 'submission_detail' submission.id %}"
                       class="btn btn-primary"
                     >
                       <i class="fas fa-eye"></i> Review
                     </a>
+
+                    {% if user.can_review_submissions and
+                    submission.can_be_reviewed_by(user) %}
+                    <form
+                      method="post"
+                      action="{% url 'review_submission' submission.id %}"
+                      style="display: inline"
+                    >
+                      {% csrf_token %}
+                      <input type="hidden" name="action" value="approved" />
+                      <button type="submit" class="btn btn-success">
+                        <i class="fas fa-check"></i> Approve
+                      </button>
+                    </form>
+
+                    <form
+                      method="post"
+                      action="{% url 'review_submission' submission.id %}"
+                      style="display: inline"
+                    >
+                      {% csrf_token %}
+                      <input type="hidden" name="action" value="rejected" />
+                      <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-times"></i> Reject
+                      </button>
+                    </form>
+
+                    <form
+                      method="post"
+                      action="{% url 'review_submission' submission.id %}"
+                      style="display: inline"
+                    >
+                      {% csrf_token %}
+                      <input
+                        type="hidden"
+                        name="action"
+                        value="needs_revision"
+                      />
+                      <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-edit"></i> Needs Revision
+                      </button>
+                    </form>
+
+                    <!-- Dean only: finalize -->
+                    {% if user.is_dean %}
+                    <form
+                      method="post"
+                      action="{% url 'review_submission' submission.id %}"
+                      style="display: inline"
+                    >
+                      {% csrf_token %}
+                      <input type="hidden" name="action" value="finalized" />
+                      <button type="submit" class="btn btn-dark">
+                        <i class="fas fa-gavel"></i> Finalize
+                      </button>
+                    </form>
+                    {% endif %}
                   </td>
                 </tr>
                 {% empty %}
@@ -860,12 +991,15 @@
             {% endif %}
 
             <span class="current">
-              Page {{ submissions.number }} of {{ submissions.paginator.num_pages }}
+              Page {{ submissions.number }} of {{
+              submissions.paginator.num_pages }}
             </span>
 
             {% if submissions.has_next %}
             <a href="?page={{ submissions.next_page_number }}">next</a>
-            <a href="?page={{ submissions.paginator.num_pages }}">last &raquo;</a>
+            <a href="?page={{ submissions.paginator.num_pages }}"
+              >last &raquo;</a
+            >
             {% endif %}
           </div>
           {% endif %}
@@ -881,9 +1015,11 @@
 
     <script>
       // Toggle sidebar on mobile
-      document.querySelector('.menu-toggle').addEventListener('click', function() {
-        document.querySelector('.sidebar').classList.toggle('active');
-      });
+      document
+        .querySelector(".menu-toggle")
+        .addEventListener("click", function () {
+          document.querySelector(".sidebar").classList.toggle("active");
+        });
 
       // Auto-submit form when filters change
       document

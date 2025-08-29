@@ -19,6 +19,9 @@ from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator
 from .forms import SubmissionReviewForm, SubmissionFilterForm
 from .models import FacultySubmission, SubmissionReview
+from django.views.decorators.http import require_POST
+from django.db.models import Q
+
 
 
 
@@ -248,14 +251,6 @@ def journal_publication_view(request):
             journal_pub.save()
             messages.success(request, 'Journal publication details saved successfully.')
 
-            # Create submission record for review
-            create_submission_record(
-                user=request.user,
-                submission_type='journal_publication',
-                title=f"Journal Publication: {journal_pub.title_of_paper}",
-                content=form.cleaned_data,
-                description=f"Journal: {journal_pub.journal_name}"
-            )
 
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
             progress.journal_publication_progress = True
@@ -295,14 +290,7 @@ def conference_publication_view(request):
             conference_pub.user = request.user  # 👈 Associate user
             conference_pub.save()  # Save the form data
 
-            # Create submission record for review
-            create_submission_record(
-                user=request.user,
-                submission_type='conference_publication',
-                title=f"Conference Publication: {conference_pub.title_of_paper}",
-                content=form.cleaned_data,
-                description=f"Conference: {conference_pub.conference_name}"
-            )
+            
 
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
             progress.conference_publication_progress = True
@@ -343,14 +331,7 @@ def research_projects_view(request):
             research_project.user = request.user  # Associate user
             research_project.save()  # Save the form data
 
-            # Create submission record for review
-            create_submission_record(
-                user=request.user,
-                submission_type='research_project',
-                title=f"Research Project: {research_project.title_of_project}",
-                content=form.cleaned_data,
-                description=f"Duration: {research_project.start_date} to {research_project.end_date}"
-            )
+            
 
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
             progress.research_projects_progress = True
@@ -387,6 +368,8 @@ def patents_view(request):
             patent = form.save(commit=False)
             patent.user = request.user  # Associate user
             patent.save()  # Save the form data
+
+        
             
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
             progress.patents_progress = True
@@ -420,6 +403,7 @@ def copyrights_view(request):
             copyright.user = request.user  # Associate user
             copyright.save()
 
+            
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
             progress.copyrights_progress = True
             progress.save()  # Save the progress
@@ -451,6 +435,8 @@ def phd_guidance_view(request):
             phd_guidance = form.save(commit=False)
             phd_guidance.user = request.user  # Associate user
             phd_guidance.save()  # Save the form data
+
+            
 
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
             progress.phd_guidance_progress = True
@@ -484,6 +470,8 @@ def book_chapter_view(request):
             book_chapter.user = request.user  # Associate user
             book_chapter.save()  # Save the form data
 
+            
+
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
             progress.book_chapter_progress = True
             progress.save()  # Save the progress
@@ -515,6 +503,7 @@ def book_view(request):
             book.user = request.user  # Associate user
             book.save()  # Save the form data
 
+            
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
             progress.book_progress = True
             progress.save()  # Save the progress
@@ -547,6 +536,8 @@ def consultancy_projects_view(request):
             consultancy_project = form.save(commit=False)
             consultancy_project.user = request.user  # Associate user
             consultancy_project.save()  # Save the form data
+
+        
             
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
             progress.consultancy_projects_progress = True
@@ -579,6 +570,7 @@ def editorial_roles_view(request):
             editorial_role = form.save(commit=False)
             editorial_role.user = request.user  # Associate user
             editorial_role.save()
+
 
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
             progress.editorial_roles_progress = True
@@ -613,6 +605,7 @@ def reviewer_roles_view(request):
             reviewer_role.user = request.user  # Associate user
             reviewer_role.save()
 
+
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
             progress.reviewer_roles_progress = True
             progress.save()
@@ -646,6 +639,7 @@ def awards_view(request):
             award.user = request.user  # Associate user
             award.save()
 
+
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
             progress.awards_progress = True
             progress.save()
@@ -677,6 +671,7 @@ def industry_collaboration_view(request):
             industry_collaboration = form.save(commit=False)
             industry_collaboration.user = request.user  # Associate user
             industry_collaboration.save()
+
 
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
             progress.industry_collaboration_progress = True
@@ -755,6 +750,7 @@ def annual_faculty_report_view(request):
             annual_report.user = request.user  # Associate user
             annual_report.save()
 
+
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
             # progress.annual_faculty_report = True  # Field not in model
             progress.save()
@@ -786,6 +782,7 @@ def research_grant_application_view(request):
             research_grant = form.save(commit=False)
             research_grant.user = request.user  # Associate user
             research_grant.save()
+
 
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
             # progress.research_grant_application = True  # Field not in model
@@ -819,6 +816,7 @@ def conference_travel_request_view(request):
             travel_request.user = request.user  # Associate user
             travel_request.save()
 
+
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
             # progress.conference_travel_request = True  # Field not in model
             progress.save()
@@ -850,6 +848,7 @@ def publications_update_view(request):
             publications_update = form.save(commit=False)
             publications_update.user = request.user  # Associate user
             publications_update.save()
+
 
             progress, created = UserFormProgress.objects.get_or_create(user=request.user)
             # progress.publications_update = True  # Field not in model
@@ -994,19 +993,37 @@ def is_reviewer(user):
 def review_dashboard(request):
     """
     Dashboard for deans and cluster heads to view submissions for review
+
     """
+
     filter_form = SubmissionFilterForm(request.GET)
     submissions = FacultySubmission.objects.all()
+
+    user = request.user
+
+    # Scope submissions based on role
+    if user.is_dean():
+        # Dean sees only submissions that have been touched by Cluster Head
+        submissions = submissions.filter(
+            reviewed_by__isnull=False,  # cluster head reviewed
+            status__in=['pending', 'under_review', 'needs_revision']  # still open
+        )
+    elif user.is_cluster_head():
+        dept = user.department or ''
+        submissions = submissions.filter(
+            Q(department=dept) | Q(department__isnull=True) | Q(department='')
+        ).filter(
+            reviewed_by__isnull=True  # not yet reviewed by dean
+        )
+    else:
+        messages.error(request, "You do not have access to the review dashboard.")
+        return redirect("home")
+
+    # Apply default filter (pending-ish statuses)
+    if 'status' not in request.GET or not request.GET.get('status'):
+        submissions = submissions.filter(status__in=['pending', 'under_review', 'needs_revision'])
     
-    # Apply user-specific filtering
-    if request.user.is_cluster_head():
-        # Cluster heads see only their department submissions
-        submissions = submissions.filter(department=request.user.department)
-    elif request.user.is_dean():
-        # Deans see all submissions in their school
-        submissions = submissions.filter(school=request.user.school)
-    
-    # Apply form filters
+    # Apply filters from form
     if filter_form.is_valid():
         if filter_form.cleaned_data['status']:
             submissions = submissions.filter(status=filter_form.cleaned_data['status'])
@@ -1024,13 +1041,14 @@ def review_dashboard(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
-    # Statistics
+    # Statistics (always scoped to current role’s queryset)
     stats = {
         'total_submissions': submissions.count(),
         'pending_review': submissions.filter(status='pending').count(),
         'under_review': submissions.filter(status='under_review').count(),
         'approved': submissions.filter(status='approved').count(),
         'rejected': submissions.filter(status='rejected').count(),
+        'needs_revision': submissions.filter(status='needs_revision').count(),
     }
     
     context = {
@@ -1159,3 +1177,45 @@ def FacultyForms(request):
     }
 
     return render(request, 'faculty_forms.html', context)
+
+@require_POST
+def review_submission(request, submission_id):
+    """Handle a single review action (approve / reject / needs_revision / under_review / finalize)."""
+    submission = get_object_or_404(FacultySubmission, id=submission_id)
+
+    if not submission.can_be_reviewed_by(request.user):
+        messages.error(request, "You are not allowed to review this submission.")
+        return redirect('review_dashboard')
+
+    action = request.POST.get("action")
+    comments = request.POST.get("comments", "").strip()
+
+    # Map incoming actions to status changes (only allow valid transitions)
+    valid_actions = {c[0] for c in FacultySubmission.STATUS_CHOICES}
+    if action not in valid_actions:
+        messages.error(request, "Invalid action.")
+        return redirect('review_dashboard')
+
+    # Update submission status & reviewer metadata
+    previous_status = submission.status
+    submission.status = action
+    submission.reviewed_by = request.user
+    submission.reviewed_at = timezone.now()
+    if comments:
+        # Append to existing comments if present
+        if submission.review_comments:
+            submission.review_comments += f"\n[{timezone.now().strftime('%Y-%m-%d %H:%M')}] {request.user.username}: {comments}"
+        else:
+            submission.review_comments = comments
+    submission.save()
+
+    # Persist review history entry
+    SubmissionReview.objects.create(
+        submission=submission,
+        reviewer=request.user,
+        action=action,
+        comments=comments,
+    )
+
+    messages.success(request, f"Status changed from {previous_status} to {action}.")
+    return redirect('review_dashboard')
